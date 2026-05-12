@@ -47,6 +47,14 @@ class _NoteEditorPageState extends ConsumerState<NoteEditorPage> {
         _controller.document.insert(0, widget.note!.content!);
       }
     }
+
+    // Listeners para actualizar la visibilidad de la barra de herramientas
+    _editorFocusNode.addListener(() {
+      if (mounted) setState(() {});
+    });
+    _titleFocusNode.addListener(() {
+      if (mounted) setState(() {});
+    });
   }
 
   @override
