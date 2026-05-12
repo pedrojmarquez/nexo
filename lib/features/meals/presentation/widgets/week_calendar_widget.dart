@@ -26,15 +26,19 @@ class WeekCalendarWidget extends StatelessWidget {
     required this.onNextWeek,
   });
 
-  static const _dayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  static const _dayLabels = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
 
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
     final todayIndex = _getTodayIndex(now);
     final weekEnd = weekStart.add(const Duration(days: 6));
-    final dateRange =
-        '${DateFormat('d MMM').format(weekStart)} – ${DateFormat('d MMM').format(weekEnd)}';
+    
+    // Formatear en español manualmente si el locale no está configurado
+    final months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+    final startStr = '${weekStart.day} ${months[weekStart.month - 1]}';
+    final endStr = '${weekEnd.day} ${months[weekEnd.month - 1]}';
+    final dateRange = '$startStr – $endStr';
 
     return Container(
       margin: const EdgeInsets.fromLTRB(16, 8, 16, 0),

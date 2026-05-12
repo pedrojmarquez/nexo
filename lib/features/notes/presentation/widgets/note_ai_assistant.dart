@@ -40,10 +40,12 @@ class _AddNoteAiAssistantState extends ConsumerState<NoteAiAssistant> {
   String? _error;
 
   final List<String> _suggestions = [
-    'Fix grammar',
-    'Make it professional',
-    'Summarize key points',
-    'Expand information',
+    'Corregir gramática',
+    'Hacer más profesional',
+    'Resumir puntos clave',
+    'Expandir información',
+    'Traducir a inglés',
+    'Dar formato de lista',
   ];
 
   Future<void> _processCommand(String command) async {
@@ -62,15 +64,13 @@ class _AddNoteAiAssistantState extends ConsumerState<NoteAiAssistant> {
       );
 
       if (mounted) {
-        // Extraemos el texto plano del resultado estructurado
-        final plainText =
-            result['plain_text'] as String? ?? widget.currentContent;
+        final plainText = result['plain_text'] as String? ?? widget.currentContent;
         widget.onApply(plainText);
         Navigator.pop(context);
       }
     } catch (e) {
       setState(() {
-        _error = 'Error with AI. Try again.';
+        _error = 'Error con la IA. Reintenta en unos segundos.';
         _isLoading = false;
       });
     }
@@ -98,26 +98,18 @@ class _AddNoteAiAssistantState extends ConsumerState<NoteAiAssistant> {
         children: [
           Center(
             child: Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: NexoColors.surfaceDark,
-                borderRadius: NexoShapes.full,
-              ),
+              width: 40, height: 4,
+              decoration: BoxDecoration(color: NexoColors.surfaceDark, borderRadius: NexoShapes.full),
             ),
           ),
           const SizedBox(height: 24),
           Row(
             children: [
-              const Icon(Icons.auto_awesome_rounded,
-                  color: NexoColors.primaryDark),
+              const Icon(Icons.auto_awesome_rounded, color: NexoColors.primaryDark),
               const SizedBox(width: 12),
               Text(
-                'Nexo AI Assistant',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: NexoColors.textMain,
-                    ),
+                'Asistente Nexo AI',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700, color: NexoColors.textMain),
               ),
             ],
           ),
@@ -125,71 +117,43 @@ class _AddNoteAiAssistantState extends ConsumerState<NoteAiAssistant> {
           if (_error != null)
             Padding(
               padding: const EdgeInsets.only(bottom: 16),
-              child: Text(
-                _error!,
-                style: const TextStyle(color: NexoColors.error, fontSize: 13),
-              ),
+              child: Text(_error!, style: const TextStyle(color: NexoColors.error, fontSize: 13, fontWeight: FontWeight.w600)),
             ),
           TextField(
             controller: _commandController,
             autofocus: true,
             enabled: !_isLoading,
             decoration: InputDecoration(
-              hintText: 'How can I help you with this note?',
-              border: OutlineInputBorder(
-                borderRadius: NexoShapes.medium,
-                borderSide: BorderSide(color: NexoColors.divider),
-              ),
+              hintText: '¿En qué puedo ayudarte con esta nota?',
+              border: OutlineInputBorder(borderRadius: NexoShapes.medium, borderSide: BorderSide.none),
               filled: true,
               fillColor: NexoColors.surface,
               suffixIcon: _isLoading
-                  ? const Padding(
-                      padding: EdgeInsets.all(12),
-                      child: CircularProgressIndicator(
-                          strokeWidth: 2, color: NexoColors.primaryDark),
-                    )
-                  : IconButton(
-                      icon: const Icon(Icons.send_rounded,
-                          color: NexoColors.primaryDark),
-                      onPressed: () => _processCommand(_commandController.text),
-                    ),
+                  ? const Padding(padding: EdgeInsets.all(12), child: CircularProgressIndicator(strokeWidth: 2, color: NexoColors.primaryDark))
+                  : IconButton(icon: const Icon(Icons.send_rounded, color: NexoColors.primaryDark), onPressed: () => _processCommand(_commandController.text)),
             ),
             onSubmitted: _processCommand,
           ),
-          const SizedBox(height: 16),
-          const Text(
-            'SUGGESTIONS',
-            style: TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.w800,
-              letterSpacing: 1.0,
-              color: NexoColors.textMuted,
-            ),
-          ),
+          const SizedBox(height: 20),
+          const Text('SUGERENCIAS', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, letterSpacing: 1.5, color: NexoColors.textMuted)),
           const SizedBox(height: 12),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
-              children: _suggestions
-                  .map((s) => Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: ActionChip(
-                          label: Text(s),
-                          onPressed: _isLoading
-                              ? null
-                              : () {
-                                  _commandController.text = s;
-                                  _processCommand(s);
-                                },
-                          backgroundColor: NexoColors.surface,
-                          side: BorderSide.none,
-                          labelStyle: const TextStyle(
-                              fontSize: 12, color: NexoColors.textMain),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: NexoShapes.full),
-                        ),
-                      ))
-                  .toList(),
+              children: _suggestions.map((s) => Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: ActionChip(
+                  label: Text(s),
+                  onPressed: _isLoading ? null : () {
+                    _commandController.text = s;
+                    _processCommand(s);
+                  },
+                  backgroundColor: NexoColors.surface,
+                  side: BorderSide.none,
+                  labelStyle: const TextStyle(fontSize: 12, color: NexoColors.textMain, fontWeight: FontWeight.w600),
+                  shape: RoundedRectangleBorder(borderRadius: NexoShapes.full),
+                ),
+              )).toList(),
             ),
           ),
         ],

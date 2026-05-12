@@ -43,7 +43,7 @@ final activeMealPlanProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef ActiveMealPlanRef = AutoDisposeStreamProviderRef<NexoMealPlan?>;
-String _$mealsControllerHash() => r'13e997d2e421c49ecdf6ea73201aa319e1e0c039';
+String _$mealsControllerHash() => r'50ab0145a6e068c9660c036bc0738b42c6e86797';
 
 /// See also [MealsController].
 @ProviderFor(MealsController)

@@ -3,6 +3,7 @@ package com.nexoapp.nexo
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.SharedPreferences
+import android.net.Uri
 import android.widget.RemoteViews
 import es.antonborri.home_widget.HomeWidgetProvider
 import org.json.JSONArray
@@ -35,6 +36,14 @@ class DailyBoardWidgetProvider : HomeWidgetProvider() {
                 }
 
                 setTextViewText(R.id.tv_content, itemsText.trim())
+
+                // Intent para abrir el tablón (nexo://notes)
+                val intent = es.antonborri.home_widget.HomeWidgetLaunchIntent.getActivity(
+                    context, 
+                    MainActivity::class.java, 
+                    Uri.parse("nexo://notes")
+                )
+                setOnClickPendingIntent(R.id.widget_root, intent)
             }
             appWidgetManager.updateAppWidget(widgetId, views)
         }

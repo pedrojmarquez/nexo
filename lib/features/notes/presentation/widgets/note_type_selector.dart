@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nexo/core/theme/app_colors.dart';
 import 'package:nexo/core/theme/app_shapes.dart';
+import 'package:nexo/features/notes/presentation/providers/notes_provider.dart';
 
-/// ─────────────────────────────────────────────────────────────────────────────
-/// Note Type Selector — Bottom sheet para elegir qué tipo de nota crear
-/// ─────────────────────────────────────────────────────────────────────────────
-class NoteTypeSelector extends StatelessWidget {
+class NoteTypeSelector extends ConsumerWidget {
   const NoteTypeSelector({super.key});
 
   static Future<void> show(BuildContext context) {
@@ -18,7 +17,7 @@ class NoteTypeSelector extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       decoration: const BoxDecoration(
         color: NexoColors.white,
@@ -28,44 +27,19 @@ class NoteTypeSelector extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Handle
           Container(
-            width: 40,
-            height: 4,
-            margin: const EdgeInsets.only(bottom: 24),
-            decoration: BoxDecoration(
-              color: NexoColors.surfaceDark,
-              borderRadius: NexoShapes.full,
-            ),
+            width: 40, height: 4, margin: const EdgeInsets.only(bottom: 24),
+            decoration: BoxDecoration(color: NexoColors.surfaceDark, borderRadius: NexoShapes.full),
           ),
-
-          const Text(
-            'Crear nueva',
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w900,
-              color: NexoColors.textMain,
-              letterSpacing: -0.5,
-            ),
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            '¿Qué te gustaría crear?',
-            style: TextStyle(color: NexoColors.textSub, fontSize: 14),
-          ),
+          const Text('¿Qué quieres crear?', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: NexoColors.textMain)),
           const SizedBox(height: 28),
-
-          // Opciones
           _NoteTypeOption(
             icon: Icons.edit_note_rounded,
             iconColor: NexoColors.primaryDark,
             bgColor: NexoColors.primary.withValues(alpha: 0.12),
             title: 'Nota estándar',
-            subtitle: 'Editor con herramientas de formato',
-            onTap: () {
-              Navigator.pop(context);
-              context.push('/notas/nuevo', extra: 'text');
-            },
+            subtitle: 'Editor enriquecido para textos largos',
+            onTap: () { Navigator.pop(context); context.push('/notas/nuevo'); },
           ),
           const SizedBox(height: 12),
           _NoteTypeOption(
@@ -73,11 +47,8 @@ class NoteTypeSelector extends StatelessWidget {
             iconColor: const Color(0xFFE67E22),
             bgColor: const Color(0xFFE67E22).withValues(alpha: 0.12),
             title: 'Post-it rápido',
-            subtitle: 'Nota adhesiva colorida para ideas rápidas',
-            onTap: () {
-              Navigator.pop(context);
-              context.push('/notas/postit');
-            },
+            subtitle: 'Nota adhesiva con recordatorio',
+            onTap: () { Navigator.pop(context); context.push('/notas/postit'); },
           ),
           const SizedBox(height: 12),
           _NoteTypeOption(
@@ -85,10 +56,16 @@ class NoteTypeSelector extends StatelessWidget {
             iconColor: NexoColors.success,
             bgColor: NexoColors.success.withValues(alpha: 0.12),
             title: 'Lista de la compra',
-            subtitle: 'Lista interactiva con opción de compartir',
-            onTap: () {
+            subtitle: 'Organiza tus productos y comparte',
+            onTap: () async {
+              final notes = ref.read(userNotesProvider).valueOrNull ?? [];
+              final primaryList = notes.where((n) => n.isPrimaryShoppingList).firstOrNull;
               Navigator.pop(context);
-              context.push('/notas/lista');
+              if (primaryList != null) {
+                context.push('/notas/lista', extra: primaryList);
+              } else {
+                context.push('/notas/lista');
+              }
             },
           ),
         ],
@@ -105,14 +82,7 @@ class _NoteTypeOption extends StatelessWidget {
   final String subtitle;
   final VoidCallback onTap;
 
-  const _NoteTypeOption({
-    required this.icon,
-    required this.iconColor,
-    required this.bgColor,
-    required this.title,
-    required this.subtitle,
-    required this.onTap,
-  });
+  const _NoteTypeOption({required this.icon, required this.iconColor, required this.bgColor, required this.title, required this.subtitle, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -127,12 +97,8 @@ class _NoteTypeOption extends StatelessWidget {
           child: Row(
             children: [
               Container(
-                width: 52,
-                height: 52,
-                decoration: BoxDecoration(
-                  color: bgColor,
-                  borderRadius: NexoShapes.medium,
-                ),
+                width: 52, height: 52,
+                decoration: BoxDecoration(color: bgColor, borderRadius: NexoShapes.medium),
                 child: Icon(icon, color: iconColor, size: 28),
               ),
               const SizedBox(width: 16),
@@ -140,23 +106,13 @@ class _NoteTypeOption extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          color: NexoColors.textMain,
-                        )),
+                    Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: NexoColors.textMain)),
                     const SizedBox(height: 3),
-                    Text(subtitle,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          color: NexoColors.textMuted,
-                        )),
+                    Text(subtitle, style: const TextStyle(fontSize: 13, color: NexoColors.textMuted)),
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right_rounded,
-                  color: NexoColors.textMuted),
+              const Icon(Icons.chevron_right_rounded, color: NexoColors.textMuted),
             ],
           ),
         ),

@@ -100,6 +100,9 @@ class NexoNote with _$NexoNote {
     /// Fecha programada (para notificaciones y tablón diario)
     @ServerTimestampConverter() DateTime? scheduledDate,
 
+    /// Indica si la nota es pública (accesible vía link)
+    @Default(false) bool isPublic,
+
     /// Timestamp de creación
     @ServerTimestampConverter() DateTime? createdAt,
 

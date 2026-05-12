@@ -25,9 +25,7 @@ final notesRepositoryProvider = AutoDisposeProvider<NotesRepository>.internal(
 typedef NotesRepositoryRef = AutoDisposeProviderRef<NotesRepository>;
 String _$userNotesHash() => r'a9ef4f585ace4a8aeb4d83bf012c17f2e11360af';
 
-/// Stream de todas las notas activas del usuario actual
-///
-/// Copied from [userNotes].
+/// See also [userNotes].
 @ProviderFor(userNotes)
 final userNotesProvider = AutoDisposeStreamProvider<List<NexoNote>>.internal(
   userNotes,
@@ -41,11 +39,9 @@ final userNotesProvider = AutoDisposeStreamProvider<List<NexoNote>>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef UserNotesRef = AutoDisposeStreamProviderRef<List<NexoNote>>;
-String _$notesControllerHash() => r'8f08828b62477ba8d7a26ef0703994e20cacfa43';
+String _$notesControllerHash() => r'0cf97d0272ac4ac5004c5b9a42ac35caf45dd6ef';
 
-/// Controlador para crear/editar notas de forma asíncrona
-///
-/// Copied from [NotesController].
+/// See also [NotesController].
 @ProviderFor(NotesController)
 final notesControllerProvider =
     AutoDisposeAsyncNotifierProvider<NotesController, void>.internal(

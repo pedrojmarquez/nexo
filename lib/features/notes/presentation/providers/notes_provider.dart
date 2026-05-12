@@ -2,25 +2,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:nexo/features/auth/presentation/providers/auth_provider.dart';
 import 'package:nexo/features/notes/data/notes_repository.dart';
+import 'package:nexo/core/services/home_widget_service.dart';
 import 'package:nexo/features/notes/domain/note_model.dart';
-import 'package:nexo/features/auth/data/auth_repository.dart';
 import 'package:nexo/core/services/notification_service.dart';
+import 'package:share_plus/share_plus.dart';
 
 part 'notes_provider.g.dart';
 
 @riverpod
 NotesRepository notesRepository(Ref ref) => NotesRepository();
 
-/// Stream de todas las notas activas del usuario actual
 @riverpod
 Stream<List<NexoNote>> userNotes(Ref ref) {
   final user = ref.watch(authStateChangesProvider).valueOrNull;
   if (user == null) return const Stream.empty();
-
   return ref.watch(notesRepositoryProvider).watchUserNotes(user.uid);
 }
 
-/// Controlador para crear/editar notas de forma asíncrona
 @riverpod
 class NotesController extends _$NotesController {
   @override
@@ -41,7 +39,7 @@ class NotesController extends _$NotesController {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       final note = NexoNote(
-        id: '', // Firestore genera el ID
+        id: '', 
         ownerUid: user.uid,
         title: title.isEmpty ? 'Sin título' : title,
         content: content,
@@ -52,11 +50,20 @@ class NotesController extends _$NotesController {
         noteSubType: noteSubType,
         scheduledDate: scheduledDate,
       );
-      await ref.read(notesRepositoryProvider).createNote(note);
+      
+      
+      final newId = await ref.read(notesRepositoryProvider).createNote(note);
+
+      // Sincronizar widgets
+      final updatedNotes = [...ref.read(userNotesProvider).valueOrNull ?? [], note.copyWith(id: newId)];
+      HomeWidgetService.updateDailyBoardWidget(updatedNotes);
+      if (noteSubType == 'post_it') {
+        HomeWidgetService.updatePostItWidget(note.copyWith(id: newId));
+      }
 
       if (scheduledDate != null) {
         await NotificationService().scheduleNotification(
-          id: note.id.hashCode,
+          id: newId.hashCode,
           title: 'Recordatorio de Nexo',
           body: title.isEmpty ? (content.isEmpty ? 'Post-it' : content) : title,
           scheduledDate: scheduledDate,
@@ -86,17 +93,13 @@ class NotesController extends _$NotesController {
         isPrimaryShoppingList: isPrimary,
         noteSubType: isPrimary ? 'shopping_principal' : 'list',
       );
-      await ref.read(notesRepositoryProvider).createNote(note);
-    });
-  }
+      final newId = await ref.read(notesRepositoryProvider).createNote(note);
 
-  Future<void> toggleNoteStatus(String noteId, NoteStatus newStatus) async {
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      // Optamos por actualizar solo el campo usando una transacción o un update directo
-      // Para simplificar, usamos deleteNote si el nuevo estado es deleted.
-      if (newStatus == NoteStatus.deleted) {
-        await ref.read(notesRepositoryProvider).deleteNote(noteId);
+      // Sincronizar widgets
+      final updatedNotes = [...ref.read(userNotesProvider).valueOrNull ?? [], note.copyWith(id: newId)];
+      HomeWidgetService.updateDailyBoardWidget(updatedNotes);
+      if (isPrimary) {
+        HomeWidgetService.updateShoppingListWidget(note.copyWith(id: newId));
       }
     });
   }
@@ -105,6 +108,17 @@ class NotesController extends _$NotesController {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       await ref.read(notesRepositoryProvider).updateNote(note);
+
+      // Sincronizar widgets
+      final currentNotes = ref.read(userNotesProvider).valueOrNull ?? [];
+      final updatedNotes = currentNotes.map((n) => n.id == note.id ? note : n).toList();
+      HomeWidgetService.updateDailyBoardWidget(updatedNotes);
+      if (note.noteSubType == 'post_it') {
+        HomeWidgetService.updatePostItWidget(note);
+      }
+      if (note.isPrimaryShoppingList) {
+        HomeWidgetService.updateShoppingListWidget(note);
+      }
 
       if (note.scheduledDate != null) {
         await NotificationService().scheduleNotification(
@@ -126,47 +140,28 @@ class NotesController extends _$NotesController {
       if (user == null) return;
 
       final repo = ref.read(notesRepositoryProvider);
-      final allNotes = await repo.getUserNotes(user.uid);
-      final note = allNotes.cast<NexoNote?>().firstWhere(
-            (n) => n?.id == noteId,
-            orElse: () => null,
-          );
+      
+      // Intentamos obtener la nota de la lista actual en memoria para saber si somos dueños
+      final currentNotes = ref.read(userNotesProvider).valueOrNull ?? [];
+      final note = currentNotes.where((n) => n.id == noteId).firstOrNull;
 
-      if (note == null) return;
-
-      // Si soy usuario compartido (no soy el dueño), solo me quito del array
-      if (note.ownerUid != user.uid) {
+      await NotificationService().cancelNotification(noteId.hashCode);
+      
+      if (note != null && note.ownerUid == user.uid) {
+        await repo.deleteNote(noteId);
+      } else if (note != null) {
         await repo.removeUserFromSharedNote(noteId, user.uid);
       } else {
-        // Soy el dueño → borrado lógico normal
+        // Si no está en memoria, intentamos borrarla directamente (el repo fallará si no existe)
         await repo.deleteNote(noteId);
       }
-    });
-  }
 
-  Future<void> setPrimaryShoppingList(String noteId) async {
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      final repo = ref.read(notesRepositoryProvider);
-      final user = ref.read(authStateChangesProvider).valueOrNull;
-      if (user == null) return;
-
-      // 1. Buscar todas las notas del usuario
-      final notes = await repo.getUserNotes(user.uid);
-
-      // 2. Desactivar el flag en todas las listas de compra
-      for (final note in notes) {
-        if (note.isPrimaryShoppingList) {
-          await repo.updateNote(note.copyWith(isPrimaryShoppingList: false));
-        }
+      // Sincronizar widgets después de borrar
+      final updatedNotes = (ref.read(userNotesProvider).valueOrNull ?? []).where((n) => n.id != noteId).toList();
+      HomeWidgetService.updateDailyBoardWidget(updatedNotes);
+      if (note?.noteSubType == 'post_it') {
+        HomeWidgetService.updatePostItWidget(null);
       }
-
-      // 3. Activar el flag en la seleccionada
-      final selectedNote = notes.firstWhere((n) => n.id == noteId);
-      await repo.updateNote(selectedNote.copyWith(
-        isPrimaryShoppingList: true,
-        noteSubType: 'shopping_principal', // Aseguramos el subtipo
-      ));
     });
   }
 
@@ -178,23 +173,16 @@ class NotesController extends _$NotesController {
       final currentUser = ref.read(authStateChangesProvider).value;
       if (currentUser == null) return;
 
-      // 1. Buscar usuario por email
       final targetUser = await authRepo.findUserByEmail(email);
       if (targetUser == null) {
         throw Exception('No se encontró ningún usuario con ese email.');
       }
 
-      // 2. Obtener nota actual
-      final allNotes = await notesRepo.getUserNotes(currentUser.uid);
-      final note = allNotes.firstWhere((n) => n.id == noteId);
+      final notes = await notesRepo.getUserNotes(currentUser.uid);
+      final note = notes.firstWhere((n) => n.id == noteId);
 
-      // 3. Añadir al array sharedWith si no está
       if (note.sharedWith.contains(targetUser.uid)) {
         throw Exception('Esta nota ya está compartida con este usuario.');
-      }
-
-      if (targetUser.uid == currentUser.uid) {
-        throw Exception('No puedes compartir una nota contigo mismo.');
       }
 
       final updatedNote = note.copyWith(
@@ -204,5 +192,74 @@ class NotesController extends _$NotesController {
 
       await notesRepo.updateNote(updatedNote);
     });
+  }
+  
+  Future<void> setPrimaryShoppingList(String noteId) async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      final repo = ref.read(notesRepositoryProvider);
+      final user = ref.read(authStateChangesProvider).valueOrNull;
+      if (user == null) return;
+      final notes = await repo.getUserNotes(user.uid);
+      for (final note in notes) {
+        if (note.isPrimaryShoppingList) {
+          await repo.updateNote(note.copyWith(isPrimaryShoppingList: false));
+        }
+      }
+      final selectedNote = notes.firstWhere((n) => n.id == noteId);
+      await repo.updateNote(selectedNote.copyWith(
+        isPrimaryShoppingList: true,
+        noteSubType: 'shopping_principal',
+      ));
+
+      // Sincronizar widgets
+      final currentNotes = ref.read(userNotesProvider).valueOrNull ?? [];
+      final updatedNotes = currentNotes.map((n) => n.id == noteId ? selectedNote.copyWith(isPrimaryShoppingList: true) : n.copyWith(isPrimaryShoppingList: false)).toList();
+      HomeWidgetService.updateDailyBoardWidget(updatedNotes);
+      HomeWidgetService.updateShoppingListWidget(selectedNote.copyWith(isPrimaryShoppingList: true));
+    });
+  }
+
+  Future<void> addItemsToPrimaryShoppingList(List<NoteItem> newItems) async {
+    final user = ref.read(authStateChangesProvider).valueOrNull;
+    if (user == null) return;
+
+    final repo = ref.read(notesRepositoryProvider);
+    final notes = await repo.getUserNotes(user.uid);
+    
+    NexoNote? primaryList = notes.cast<NexoNote?>().firstWhere(
+      (n) => n?.isPrimaryShoppingList == true && n?.type == NoteType.list,
+      orElse: () => null,
+    );
+
+    if (primaryList == null) {
+      primaryList = notes.cast<NexoNote?>().firstWhere(
+        (n) => n?.noteSubType == 'shopping_principal' || n?.noteSubType == 'list',
+        orElse: () => null,
+      );
+    }
+
+    if (primaryList != null) {
+      final existingTexts = primaryList.items.map((i) => i.text.toLowerCase().trim()).toSet();
+      final filteredNewItems = newItems.where((ni) => !existingTexts.contains(ni.text.toLowerCase().trim())).toList();
+      
+      if (filteredNewItems.isEmpty) return;
+
+      final updatedItems = [...primaryList.items, ...filteredNewItems];
+      await updateNote(primaryList.copyWith(items: updatedItems));
+    } else {
+      await createListNote('Lista de la Compra', newItems, isPrimary: true);
+    }
+  }
+
+  Future<void> shareNoteViaLink(NexoNote note) async {
+    final link = 'nexo://notes/invite?id=${note.id}';
+    final text = '¡Hola! Te invito a colaborar en mi nota "${note.title}" en Nexo. Haz clic aquí para verla: $link';
+    
+    await ref.read(notesRepositoryProvider).updateNote(note.copyWith(
+      isPublic: true, 
+    ));
+
+    await Share.share(text);
   }
 }

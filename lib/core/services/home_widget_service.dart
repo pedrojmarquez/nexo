@@ -38,24 +38,17 @@ class HomeWidgetService {
         await HomeWidget.saveWidgetData<String>(
             'shopping_title', listNote.title);
 
-        final activeItems =
-            listNote.items.where((i) => !i.isChecked).take(5).toList();
-        final total = listNote.items.length;
-        final completed = listNote.items.where((i) => i.isChecked).length;
-
-        final itemsJson = jsonEncode(activeItems.map((e) => e.text).toList());
+        // Enviamos todos los items como JSON (el widget filtrará o mostrará los primeros)
+        final itemsJson = jsonEncode(listNote.items.map((e) => {
+          'text': e.text,
+          'isChecked': e.isChecked,
+        }).toList());
 
         await HomeWidget.saveWidgetData<String>('shopping_items', itemsJson);
-        await HomeWidget.saveWidgetData<String>(
-            'shopping_progress', '$completed/$total');
-        await HomeWidget.saveWidgetData<int>(
-            'shopping_remaining_count', activeItems.length);
       } else {
         await HomeWidget.saveWidgetData<String>(
             'shopping_title', 'Lista de la compra');
         await HomeWidget.saveWidgetData<String>('shopping_items', '[]');
-        await HomeWidget.saveWidgetData<String>('shopping_progress', '0/0');
-        await HomeWidget.saveWidgetData<int>('shopping_remaining_count', 0);
       }
       await HomeWidget.updateWidget(name: 'ShoppingWidgetProvider');
     } catch (e) {
@@ -63,8 +56,7 @@ class HomeWidgetService {
     }
   }
 
-  static Future<void> updateMealCalendarWidget(
-      NexoMealPlan? plan, DateTime weekStart) async {
+  static Future<void> updateMealCalendarWidget(NexoMealPlan? plan) async {
     try {
       if (plan != null) {
         final now = DateTime.now();

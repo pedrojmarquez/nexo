@@ -3,6 +3,7 @@ package com.nexoapp.nexo
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.SharedPreferences
+import android.net.Uri
 import android.widget.RemoteViews
 import es.antonborri.home_widget.HomeWidgetProvider
 import org.json.JSONArray
@@ -49,6 +50,14 @@ class MealCalendarWidgetProvider : HomeWidgetProvider() {
                 }
 
                 setTextViewText(R.id.tv_meals, mealsText.trim())
+
+                // Intent para abrir el calendario de comidas (nexo://meals)
+                val intent = es.antonborri.home_widget.HomeWidgetLaunchIntent.getActivity(
+                    context, 
+                    MainActivity::class.java, 
+                    android.net.Uri.parse("nexo://meals")
+                )
+                setOnClickPendingIntent(R.id.widget_root, intent)
             }
             appWidgetManager.updateAppWidget(widgetId, views)
         }

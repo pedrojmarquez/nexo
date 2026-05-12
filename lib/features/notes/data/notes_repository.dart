@@ -78,20 +78,22 @@ class NotesRepository {
     return notes;
   }
 
-  /// Crea una nueva nota
-  Future<void> createNote(NexoNote note) async {
+  /// Crea una nueva nota y devuelve su ID
+  Future<String> createNote(NexoNote note) async {
     final docRef = _notesRef.doc();
+    final now = DateTime.now().toUtc();
     final newNote = note.copyWith(
       id: docRef.id,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
+      createdAt: now,
+      updatedAt: now,
     );
     await docRef.set(newNote);
+    return docRef.id;
   }
 
   /// Actualiza una nota existente
   Future<void> updateNote(NexoNote note) async {
-    final updatedNote = note.copyWith(updatedAt: DateTime.now());
+    final updatedNote = note.copyWith(updatedAt: DateTime.now().toUtc());
     await _notesRef.doc(note.id).set(updatedNote, SetOptions(merge: true));
   }
 

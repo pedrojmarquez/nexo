@@ -6,6 +6,7 @@ import 'package:nexo/features/meals/data/meals_repository.dart';
 import 'package:nexo/features/meals/domain/meal_plan_model.dart';
 import 'package:nexo/features/notes/presentation/providers/notes_provider.dart';
 import 'package:nexo/features/notes/domain/note_model.dart';
+import 'package:nexo/core/services/home_widget_service.dart';
 import 'package:uuid/uuid.dart';
 
 part 'meals_provider.g.dart';
@@ -65,6 +66,10 @@ class MealsController extends _$MealsController {
       );
 
       await ref.read(mealsRepositoryProvider).createMealPlan(plan);
+      
+      // Sincronizar widgets
+      HomeWidgetService.updateMealCalendarWidget(plan);
+      
       state = const AsyncValue.data(null);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
@@ -139,6 +144,10 @@ class MealsController extends _$MealsController {
         updatedAt: DateTime.now(),
       );
       await notesRepo.updateNote(updatedNote);
+      
+      // Sincronizar widgets
+      HomeWidgetService.updateShoppingListWidget(updatedNote);
+      
     } catch (e) {
       rethrow;
     }
@@ -188,6 +197,10 @@ class MealsController extends _$MealsController {
         updatedAt: DateTime.now(),
       );
       await notesRepo.updateNote(updatedNote);
+
+      // Sincronizar widgets
+      HomeWidgetService.updateShoppingListWidget(updatedNote);
+
       state = const AsyncValue.data(null);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
@@ -227,8 +240,33 @@ class MealsController extends _$MealsController {
         ),
       );
 
-      final updatedMeals = [...plan.meals, newMeal];
-      await repo.updateMealPlan(plan.copyWith(meals: updatedMeals));
+      final updatedPlan = plan.copyWith(meals: updatedMeals);
+      await repo.updateMealPlan(updatedPlan);
+
+      // Sincronizar widgets
+      HomeWidgetService.updateMealCalendarWidget(updatedPlan);
+
+      state = const AsyncValue.data(null);
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
+  }
+
+  /// Elimina una comida específica de un plan
+  Future<void> removeMealFromPlan(String planId, String mealId) async {
+    state = const AsyncValue.loading();
+    try {
+      final repo = ref.read(mealsRepositoryProvider);
+      await repo.removeMealFromPlan(planId, mealId);
+      
+      // Intentamos refrescar el widget (aunque no tenemos el plan completo aquí, el listener en app.dart lo hará)
+      // pero por si acaso, si podemos obtener el plan actual lo hacemos.
+      final currentPlan = ref.read(activeMealPlanProvider).valueOrNull;
+      if (currentPlan != null && currentPlan.id == planId) {
+        final updatedPlan = currentPlan.copyWith(meals: currentPlan.meals.where((m) => m.id != mealId).toList());
+        HomeWidgetService.updateMealCalendarWidget(updatedPlan);
+      }
+
       state = const AsyncValue.data(null);
     } catch (e, st) {
       state = AsyncValue.error(e, st);

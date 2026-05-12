@@ -31,7 +31,7 @@ class _MealsPageState extends ConsumerState<MealsPage> {
     _selectedDayIndex = (now.weekday - 1).clamp(0, 6);
     _pageController = PageController(
       initialPage: _selectedDayIndex,
-      viewportFraction: 0.88,
+      viewportFraction: 0.94, // Más grande
     );
   }
 
@@ -102,8 +102,11 @@ class _MealsPageState extends ConsumerState<MealsPage> {
       }
     }
 
-    return Column(
-      children: [
+    return Center(
+      child: Container(
+        constraints: const BoxConstraints(maxWidth: 1000),
+        child: Column(
+          children: [
         // ── Mini calendario semanal (arriba, compacto) ──────────
         WeekCalendarWidget(
           weekStart: weekStart,
@@ -119,7 +122,7 @@ class _MealsPageState extends ConsumerState<MealsPage> {
         // ── Carrusel de días (abajo, más grande) ────────────────
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.only(bottom: 100), // Evita solapamiento con footer
+            padding: const EdgeInsets.only(bottom: 20),
             child: PageView.builder(
               controller: _pageController,
               onPageChanged: (index) {
@@ -149,7 +152,9 @@ class _MealsPageState extends ConsumerState<MealsPage> {
             ),
           ),
         ),
-      ],
+          ],
+        ),
+      ),
     );
   }
 

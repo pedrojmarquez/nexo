@@ -75,6 +75,9 @@ mixin _$NexoNote {
   @ServerTimestampConverter()
   DateTime? get scheduledDate => throw _privateConstructorUsedError;
 
+  /// Indica si la nota es pública (accesible vía link)
+  bool get isPublic => throw _privateConstructorUsedError;
+
   /// Timestamp de creación
   @ServerTimestampConverter()
   DateTime? get createdAt => throw _privateConstructorUsedError;
@@ -117,6 +120,7 @@ abstract class $NexoNoteCopyWith<$Res> {
       String? aiSummary,
       String? backgroundPattern,
       @ServerTimestampConverter() DateTime? scheduledDate,
+      bool isPublic,
       @ServerTimestampConverter() DateTime? createdAt,
       @ServerTimestampConverter() DateTime? updatedAt});
 }
@@ -154,6 +158,7 @@ class _$NexoNoteCopyWithImpl<$Res, $Val extends NexoNote>
     Object? aiSummary = freezed,
     Object? backgroundPattern = freezed,
     Object? scheduledDate = freezed,
+    Object? isPublic = null,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
@@ -230,6 +235,10 @@ class _$NexoNoteCopyWithImpl<$Res, $Val extends NexoNote>
           ? _value.scheduledDate
           : scheduledDate // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      isPublic: null == isPublic
+          ? _value.isPublic
+          : isPublic // ignore: cast_nullable_to_non_nullable
+              as bool,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -269,6 +278,7 @@ abstract class _$$NexoNoteImplCopyWith<$Res>
       String? aiSummary,
       String? backgroundPattern,
       @ServerTimestampConverter() DateTime? scheduledDate,
+      bool isPublic,
       @ServerTimestampConverter() DateTime? createdAt,
       @ServerTimestampConverter() DateTime? updatedAt});
 }
@@ -304,6 +314,7 @@ class __$$NexoNoteImplCopyWithImpl<$Res>
     Object? aiSummary = freezed,
     Object? backgroundPattern = freezed,
     Object? scheduledDate = freezed,
+    Object? isPublic = null,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
@@ -380,6 +391,10 @@ class __$$NexoNoteImplCopyWithImpl<$Res>
           ? _value.scheduledDate
           : scheduledDate // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      isPublic: null == isPublic
+          ? _value.isPublic
+          : isPublic // ignore: cast_nullable_to_non_nullable
+              as bool,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -414,6 +429,7 @@ class _$NexoNoteImpl implements _NexoNote {
       this.aiSummary,
       this.backgroundPattern,
       @ServerTimestampConverter() this.scheduledDate,
+      this.isPublic = false,
       @ServerTimestampConverter() this.createdAt,
       @ServerTimestampConverter() this.updatedAt})
       : _items = items,
@@ -525,6 +541,11 @@ class _$NexoNoteImpl implements _NexoNote {
   @ServerTimestampConverter()
   final DateTime? scheduledDate;
 
+  /// Indica si la nota es pública (accesible vía link)
+  @override
+  @JsonKey()
+  final bool isPublic;
+
   /// Timestamp de creación
   @override
   @ServerTimestampConverter()
@@ -537,7 +558,7 @@ class _$NexoNoteImpl implements _NexoNote {
 
   @override
   String toString() {
-    return 'NexoNote(id: $id, ownerUid: $ownerUid, title: $title, type: $type, content: $content, items: $items, tags: $tags, accentColor: $accentColor, sharedWith: $sharedWith, status: $status, isAiEnhanced: $isAiEnhanced, isPinned: $isPinned, noteSubType: $noteSubType, richContent: $richContent, isPrimaryShoppingList: $isPrimaryShoppingList, aiSummary: $aiSummary, backgroundPattern: $backgroundPattern, scheduledDate: $scheduledDate, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'NexoNote(id: $id, ownerUid: $ownerUid, title: $title, type: $type, content: $content, items: $items, tags: $tags, accentColor: $accentColor, sharedWith: $sharedWith, status: $status, isAiEnhanced: $isAiEnhanced, isPinned: $isPinned, noteSubType: $noteSubType, richContent: $richContent, isPrimaryShoppingList: $isPrimaryShoppingList, aiSummary: $aiSummary, backgroundPattern: $backgroundPattern, scheduledDate: $scheduledDate, isPublic: $isPublic, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -574,6 +595,8 @@ class _$NexoNoteImpl implements _NexoNote {
                 other.backgroundPattern == backgroundPattern) &&
             (identical(other.scheduledDate, scheduledDate) ||
                 other.scheduledDate == scheduledDate) &&
+            (identical(other.isPublic, isPublic) ||
+                other.isPublic == isPublic) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
@@ -602,6 +625,7 @@ class _$NexoNoteImpl implements _NexoNote {
         aiSummary,
         backgroundPattern,
         scheduledDate,
+        isPublic,
         createdAt,
         updatedAt
       ]);
@@ -642,6 +666,7 @@ abstract class _NexoNote implements NexoNote {
       final String? aiSummary,
       final String? backgroundPattern,
       @ServerTimestampConverter() final DateTime? scheduledDate,
+      final bool isPublic,
       @ServerTimestampConverter() final DateTime? createdAt,
       @ServerTimestampConverter() final DateTime? updatedAt}) = _$NexoNoteImpl;
 
@@ -720,6 +745,10 @@ abstract class _NexoNote implements NexoNote {
   @override
   @ServerTimestampConverter()
   DateTime? get scheduledDate;
+
+  /// Indica si la nota es pública (accesible vía link)
+  @override
+  bool get isPublic;
 
   /// Timestamp de creación
   @override

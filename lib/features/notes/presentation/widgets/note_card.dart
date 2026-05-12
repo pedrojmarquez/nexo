@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:nexo/core/theme/app_colors.dart';
 import 'package:nexo/core/theme/app_shapes.dart';
@@ -66,7 +65,8 @@ class _PostItCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = _getColor();
-    final rotation = (Random(note.id.hashCode).nextDouble() - 0.5) * 0.04;
+    // Rotation based on fixed ID hash for stability
+    final rotation = ((note.id.hashCode % 10) / 100.0) - 0.05;
 
     return Transform.rotate(
       angle: rotation,

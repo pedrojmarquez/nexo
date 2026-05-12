@@ -10,13 +10,8 @@ import 'package:nexo/features/notes/domain/note_model.dart';
 import 'package:nexo/features/notes/presentation/providers/notes_provider.dart';
 import 'package:nexo/features/notes/presentation/widgets/note_ai_assistant.dart';
 
-/// ─────────────────────────────────────────────────────────────────────────────
-/// NoteEditorPage — Editor rico para notas estándar
-/// Toolbar aparece solo cuando el teclado está abierto (encima del teclado)
-/// ─────────────────────────────────────────────────────────────────────────────
 class NoteEditorPage extends ConsumerStatefulWidget {
   final NexoNote? note;
-
   const NoteEditorPage({super.key, this.note});
 
   @override
@@ -31,7 +26,6 @@ class _NoteEditorPageState extends ConsumerState<NoteEditorPage> {
   bool _isPinned = false;
   String? _backgroundPattern;
   bool _showBackgroundPicker = false;
-  bool _showToolbar = false;
 
   @override
   void initState() {
@@ -43,41 +37,48 @@ class _NoteEditorPageState extends ConsumerState<NoteEditorPage> {
     if (widget.note?.richContent != null) {
       try {
         final doc = Document.fromJson(jsonDecode(widget.note!.richContent!));
-        _controller = QuillController(
-            document: doc, selection: const TextSelection.collapsed(offset: 0));
+        _controller = QuillController(document: doc, selection: const TextSelection.collapsed(offset: 0));
       } catch (e) {
         _controller = QuillController.basic();
       }
-    } else if (widget.note?.content != null) {
-      _controller = QuillController(
-        document: Document()..insert(0, widget.note!.content!),
-        selection: const TextSelection.collapsed(offset: 0),
-      );
     } else {
       _controller = QuillController.basic();
-    }
-
-    // Listener para mostrar/ocultar toolbar según foco
-    _editorFocusNode.addListener(_onFocusChanged);
-    _titleFocusNode.addListener(_onFocusChanged);
-  }
-
-  void _onFocusChanged() {
-    final hasFocus = _editorFocusNode.hasFocus;
-    if (hasFocus != _showToolbar) {
-      setState(() => _showToolbar = hasFocus);
+      if (widget.note?.content != null) {
+        _controller.document.insert(0, widget.note!.content!);
+      }
     }
   }
 
   @override
   void dispose() {
-    _editorFocusNode.removeListener(_onFocusChanged);
-    _titleFocusNode.removeListener(_onFocusChanged);
     _controller.dispose();
     _titleController.dispose();
     _editorFocusNode.dispose();
     _titleFocusNode.dispose();
     super.dispose();
+  }
+
+  void _deleteNote() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('¿Eliminar nota?'),
+        content: const Text('Esta nota se moverá a la papelera.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('CANCELAR')),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: TextButton.styleFrom(foregroundColor: NexoColors.error),
+            child: const Text('ELIMINAR'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && widget.note != null) {
+      ref.read(notesControllerProvider.notifier).deleteNote(widget.note!.id);
+      if (mounted) context.pop();
+    }
   }
 
   void _saveNote() {
@@ -92,32 +93,30 @@ class _NoteEditorPageState extends ConsumerState<NoteEditorPage> {
 
     if (widget.note != null) {
       ref.read(notesControllerProvider.notifier).updateNote(
-            widget.note!.copyWith(
-              title: title.isEmpty ? 'Sin título' : title,
-              content: plainText,
-              richContent: richContent,
-              isPinned: _isPinned,
-              backgroundPattern: _backgroundPattern,
-              noteSubType: 'text',
-              updatedAt: DateTime.now(),
-            ),
-          );
+        widget.note!.copyWith(
+          title: title.isEmpty ? 'Sin título' : title,
+          content: plainText,
+          richContent: richContent,
+          isPinned: _isPinned,
+          backgroundPattern: _backgroundPattern,
+          updatedAt: DateTime.now(),
+        ),
+      );
     } else {
       ref.read(notesControllerProvider.notifier).createTextNote(
-            title.isEmpty ? 'Sin título' : title,
-            plainText,
-            richContent: richContent,
-            isPinned: _isPinned,
-            noteSubType: 'text',
-          );
+        title.isEmpty ? 'Sin título' : title,
+        plainText,
+        richContent: richContent,
+        isPinned: _isPinned,
+      );
     }
-
     context.pop();
   }
 
   @override
   Widget build(BuildContext context) {
     final bgPainter = NoteBackgrounds.getPainter(_backgroundPattern);
+    final bool isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
 
     return Scaffold(
       backgroundColor: NexoColors.white,
@@ -125,136 +124,56 @@ class _NoteEditorPageState extends ConsumerState<NoteEditorPage> {
         backgroundColor: NexoColors.white,
         elevation: 0,
         leading: IconButton(
-          icon:
-              const Icon(Icons.arrow_back_rounded, color: NexoColors.textMain),
+          icon: const Icon(Icons.arrow_back_rounded, color: NexoColors.textMain),
           onPressed: _saveNote,
         ),
-        title: const Text('Nota',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+        title: const Text('Editor', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
         actions: [
-          // Background picker toggle
-          IconButton(
-            icon: Icon(
-              Icons.palette_outlined,
-              color: _backgroundPattern != null
-                  ? NexoColors.primaryDark
-                  : NexoColors.textMuted,
+          if (widget.note != null)
+            IconButton(
+              icon: const Icon(Icons.delete_outline_rounded, color: NexoColors.error),
+              onPressed: _deleteNote,
             ),
-            onPressed: () =>
-                setState(() => _showBackgroundPicker = !_showBackgroundPicker),
+          IconButton(
+            icon: Icon(Icons.palette_outlined, color: _backgroundPattern != null ? NexoColors.primaryDark : NexoColors.textMuted),
+            onPressed: () => setState(() => _showBackgroundPicker = !_showBackgroundPicker),
           ),
-          // Pin toggle
           IconButton(
-            icon: Icon(
-              _isPinned ? Icons.push_pin_rounded : Icons.push_pin_outlined,
-              color: _isPinned ? NexoColors.primaryDark : NexoColors.textMuted,
-              size: 20,
-            ),
+            icon: Icon(_isPinned ? Icons.push_pin_rounded : Icons.push_pin_outlined, color: _isPinned ? NexoColors.primaryDark : NexoColors.textMuted),
             onPressed: () => setState(() => _isPinned = !_isPinned),
           ),
-          // AI Assistant
           IconButton(
-            icon: const Icon(Icons.auto_awesome_rounded,
-                color: NexoColors.primaryDark, size: 20),
-            onPressed: () {
-              NoteAiAssistant.show(
-                context,
-                currentContent: _controller.document.toPlainText(),
-                onApply: (newText) {
-                  setState(() {
-                    _controller.document = Document()..insert(0, newText);
-                  });
-                },
-              );
-            },
+            icon: const Icon(Icons.auto_awesome_rounded, color: NexoColors.primaryDark),
+            onPressed: () => NoteAiAssistant.show(context, currentContent: _controller.document.toPlainText(), onApply: (t) {
+              setState(() { _controller.document = Document()..insert(0, t); });
+            }),
           ),
-          const SizedBox(width: 4),
         ],
       ),
       body: Column(
         children: [
-          // Background pattern picker
-          if (_showBackgroundPicker)
-            Container(
-              height: 60,
-              color: NexoColors.surface,
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                itemCount: NoteBackgrounds.allPatterns.length,
-                itemBuilder: (context, index) {
-                  final pattern = NoteBackgrounds.allPatterns[index];
-                  final isSelected = _backgroundPattern ==
-                      (pattern == 'blank' ? null : pattern);
-                  return GestureDetector(
-                    onTap: () => setState(() {
-                      _backgroundPattern = pattern == 'blank' ? null : pattern;
-                    }),
-                    child: Container(
-                      width: 44,
-                      height: 44,
-                      margin: const EdgeInsets.only(right: 10),
-                      decoration: BoxDecoration(
-                        color: NexoColors.white,
-                        borderRadius: NexoShapes.small,
-                        border: Border.all(
-                          color: isSelected
-                              ? NexoColors.primaryDark
-                              : NexoColors.divider,
-                          width: isSelected ? 2 : 1,
-                        ),
-                      ),
-                      child: Icon(
-                        NoteBackgrounds.patternIcons[pattern],
-                        size: 18,
-                        color: isSelected
-                            ? NexoColors.primaryDark
-                            : NexoColors.textMuted,
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-
-          // Editor area
+          if (_showBackgroundPicker) _buildBackgroundPicker(),
           Expanded(
             child: CustomPaint(
               painter: bgPainter,
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                 child: Column(
                   children: [
                     TextField(
                       controller: _titleController,
                       focusNode: _titleFocusNode,
-                      style: const TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.w800,
-                        color: NexoColors.textMain,
-                        height: 1.3,
-                      ),
-                      decoration: const InputDecoration(
-                        hintText: 'Título de la nota',
-                        border: InputBorder.none,
-                        hintStyle: TextStyle(
-                            color: NexoColors.textMuted,
-                            fontWeight: FontWeight.w600),
-                      ),
+                      style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w800, color: NexoColors.textMain),
+                      decoration: const InputDecoration(hintText: 'Título', border: InputBorder.none),
                     ),
-                    const SizedBox(height: 8),
                     Expanded(
                       child: QuillEditor.basic(
                         controller: _controller,
                         focusNode: _editorFocusNode,
                         config: const QuillEditorConfig(
-                          placeholder: 'Empieza a escribir algo increíble...',
+                          placeholder: 'Escribe algo...',
                           padding: EdgeInsets.zero,
-                          scrollable: true,
                           autoFocus: false,
-                          expands: true,
                         ),
                       ),
                     ),
@@ -263,19 +182,15 @@ class _NoteEditorPageState extends ConsumerState<NoteEditorPage> {
               ),
             ),
           ),
-
-          // Toolbar — solo visible cuando el teclado está abierto
-          Visibility(
-            visible: _showToolbar,
-            maintainState: true,
-            maintainAnimation: true,
-            maintainSize: false,
-            child: Container(
+          if (isKeyboardVisible && _editorFocusNode.hasFocus)
+            Container(
               decoration: BoxDecoration(
                 color: NexoColors.surface,
-                border: Border(
-                    top: BorderSide(
-                        color: NexoColors.divider.withValues(alpha: 0.5))),
+                border: Border(top: BorderSide(color: NexoColors.divider.withValues(alpha: 0.5))),
+                boxShadow: [
+                  if (!isKeyboardVisible)
+                    BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 4, offset: const Offset(0, -2))
+                ],
               ),
               child: QuillSimpleToolbar(
                 controller: _controller,
@@ -283,18 +198,47 @@ class _NoteEditorPageState extends ConsumerState<NoteEditorPage> {
                   showSearchButton: false,
                   showFontFamily: false,
                   showFontSize: false,
-                  showLink: true,
                   multiRowsDisplay: false,
                   showSubscript: false,
                   showSuperscript: false,
                   showCodeBlock: false,
                   showInlineCode: false,
-                  showSmallButton: false,
+                  showLink: true,
+                  showUndo: true,
+                  showRedo: true,
                 ),
               ),
             ),
-          ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildBackgroundPicker() {
+    return Container(
+      height: 60,
+      color: NexoColors.surface,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        itemCount: NoteBackgrounds.allPatterns.length,
+        itemBuilder: (context, index) {
+          final p = NoteBackgrounds.allPatterns[index];
+          final isSel = _backgroundPattern == (p == 'blank' ? null : p);
+          return GestureDetector(
+            onTap: () => setState(() => _backgroundPattern = (p == 'blank' ? null : p)),
+            child: Container(
+              width: 44, height: 44,
+              margin: const EdgeInsets.only(right: 10),
+              decoration: BoxDecoration(
+                color: NexoColors.white,
+                borderRadius: NexoShapes.small,
+                border: Border.all(color: isSel ? NexoColors.primaryDark : NexoColors.divider, width: isSel ? 2 : 1),
+              ),
+              child: Icon(NoteBackgrounds.patternIcons[p], size: 18, color: isSel ? NexoColors.primaryDark : NexoColors.textMuted),
+            ),
+          );
+        },
       ),
     );
   }

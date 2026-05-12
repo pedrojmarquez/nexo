@@ -37,6 +37,7 @@ _$NexoNoteImpl _$$NexoNoteImplFromJson(Map<String, dynamic> json) =>
       backgroundPattern: json['backgroundPattern'] as String?,
       scheduledDate:
           const ServerTimestampConverter().fromJson(json['scheduledDate']),
+      isPublic: json['isPublic'] as bool? ?? false,
       createdAt: const ServerTimestampConverter().fromJson(json['createdAt']),
       updatedAt: const ServerTimestampConverter().fromJson(json['updatedAt']),
     );
@@ -62,6 +63,7 @@ Map<String, dynamic> _$$NexoNoteImplToJson(_$NexoNoteImpl instance) =>
       'backgroundPattern': instance.backgroundPattern,
       'scheduledDate':
           const ServerTimestampConverter().toJson(instance.scheduledDate),
+      'isPublic': instance.isPublic,
       'createdAt': const ServerTimestampConverter().toJson(instance.createdAt),
       'updatedAt': const ServerTimestampConverter().toJson(instance.updatedAt),
     };

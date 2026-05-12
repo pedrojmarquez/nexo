@@ -205,6 +205,8 @@ Responde SIEMPRE con este formato JSON. NUNCA devuelvas texto plano ni Markdown.
 Genera una receta completa y detallada para: "$mealName"
 ${description != null ? 'Descripción adicional: "$description"' : ''}
 
+DEBES escribir TODO el contenido (nombre, descripción, pasos, consejos) en ESPAÑOL.
+
 Devuelve un JSON con esta estructura EXACTA:
 {
   "name": "Nombre completo de la receta",
@@ -244,6 +246,8 @@ Incluye entre 4 y 8 pasos detallados. Sé específico con tiempos y temperaturas
     final prompt = '''
 Lista todos los ingredientes necesarios para preparar: "$mealName"
 ${description != null ? 'Descripción: "$description"' : ''}
+
+DEBES escribir TODO el contenido en ESPAÑOL.
 
 Devuelve un JSON con esta estructura EXACTA:
 {

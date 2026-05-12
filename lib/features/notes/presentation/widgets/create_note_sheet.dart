@@ -44,74 +44,76 @@ class _CreateNoteSheetState extends ConsumerState<CreateNoteSheet> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
       ),
       padding: EdgeInsets.fromLTRB(24, 12, 24, viewInsets + 24),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Center(
-            child: Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: NexoColors.divider.withValues(alpha: 0.3),
-                borderRadius: NexoShapes.full,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Center(
+              child: Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: NexoColors.divider.withValues(alpha: 0.3),
+                  borderRadius: NexoShapes.full,
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 24),
-          const Text(
-            'Nueva Nota Rápida',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w800,
-              color: NexoColors.textMain,
-            ),
-          ),
-          const SizedBox(height: 24),
-          TextField(
-            controller: _titleController,
-            style: const TextStyle(
-                color: NexoColors.textMain, fontWeight: FontWeight.w700),
-            decoration: InputDecoration(
-              hintText: 'Título (opcional)',
-              hintStyle: const TextStyle(color: NexoColors.textMuted),
-              fillColor: NexoColors.background,
-              border: OutlineInputBorder(
-                borderRadius: NexoShapes.medium,
-                borderSide: BorderSide.none,
+            const SizedBox(height: 24),
+            const Text(
+              'Nueva Nota Rápida',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
+                color: NexoColors.textMain,
               ),
             ),
-          ),
-          const SizedBox(height: 12),
-          TextField(
-            controller: _contentController,
-            autofocus: true,
-            maxLines: 5,
-            style: const TextStyle(color: NexoColors.textMain),
-            decoration: InputDecoration(
-              hintText: 'Escribe algo...',
-              hintStyle: const TextStyle(color: NexoColors.textMuted),
-              fillColor: NexoColors.background,
-              border: OutlineInputBorder(
-                borderRadius: NexoShapes.medium,
-                borderSide: BorderSide.none,
+            const SizedBox(height: 24),
+            TextField(
+              controller: _titleController,
+              style: const TextStyle(
+                  color: NexoColors.textMain, fontWeight: FontWeight.w700),
+              decoration: InputDecoration(
+                hintText: 'Título (opcional)',
+                hintStyle: const TextStyle(color: NexoColors.textMuted),
+                fillColor: NexoColors.background,
+                border: OutlineInputBorder(
+                  borderRadius: NexoShapes.medium,
+                  borderSide: BorderSide.none,
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 24),
-          ElevatedButton(
-            onPressed: _createNote,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: NexoColors.primary,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(borderRadius: NexoShapes.medium),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _contentController,
+              autofocus: true,
+              maxLines: 5,
+              style: const TextStyle(color: NexoColors.textMain),
+              decoration: InputDecoration(
+                hintText: 'Escribe algo...',
+                hintStyle: const TextStyle(color: NexoColors.textMuted),
+                fillColor: NexoColors.background,
+                border: OutlineInputBorder(
+                  borderRadius: NexoShapes.medium,
+                  borderSide: BorderSide.none,
+                ),
+              ),
             ),
-            child: const Text(
-              'GUARDAR NOTA',
-              style: TextStyle(fontWeight: FontWeight.w900, letterSpacing: 1.2),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: _createNote,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: NexoColors.primary,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(borderRadius: NexoShapes.medium),
+              ),
+              child: const Text(
+                'GUARDAR NOTA',
+                style: TextStyle(fontWeight: FontWeight.w900, letterSpacing: 1.2),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -183,180 +183,185 @@ class _ShoppingListEditorPageState
           const SizedBox(width: 4),
         ],
       ),
-      body: Column(
-        children: [
-          // Progress header
-          if (total > 0)
-            Container(
-              padding: const EdgeInsets.fromLTRB(24, 4, 24, 12),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: ClipRRect(
-                      borderRadius: NexoShapes.full,
-                      child: LinearProgressIndicator(
-                        value: total > 0 ? checked / total : 0,
-                        backgroundColor: NexoColors.surface,
-                        valueColor:
-                            const AlwaysStoppedAnimation(NexoColors.success),
-                        minHeight: 6,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Text(
-                    '$checked/$total',
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w800,
-                      color: NexoColors.textSub,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-          // Items list
-          Expanded(
-            child: _items.isEmpty
-                ? _buildEmptyState()
-                : ReorderableListView.builder(
-                    padding: const EdgeInsets.fromLTRB(8, 0, 8, 100),
-                    itemCount: _items.length,
-                    onReorder: (oldIndex, newIndex) {
-                      setState(() {
-                        if (newIndex > oldIndex) newIndex--;
-                        final item = _items.removeAt(oldIndex);
-                        _items.insert(newIndex, item);
-                        for (int i = 0; i < _items.length; i++) {
-                          _items[i] = _items[i].copyWith(order: i);
-                        }
-                      });
-                      _autoSave();
-                    },
-                    itemBuilder: (context, index) {
-                      final item = _items[index];
-                      return Dismissible(
-                        key: ValueKey(item.id),
-                        direction: DismissDirection.endToStart,
-                        background: Container(
-                          alignment: Alignment.centerRight,
-                          padding: const EdgeInsets.only(right: 24),
-                          margin: const EdgeInsets.symmetric(vertical: 2),
-                          decoration: BoxDecoration(
-                            color: NexoColors.error.withValues(alpha: 0.1),
-                            borderRadius: NexoShapes.small,
+      body: Center(
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 800),
+          child: Column(
+            children: [
+              // Progress header
+              if (total > 0)
+                Container(
+                  padding: const EdgeInsets.fromLTRB(24, 4, 24, 12),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: ClipRRect(
+                          borderRadius: NexoShapes.full,
+                          child: LinearProgressIndicator(
+                            value: total > 0 ? checked / total : 0,
+                            backgroundColor: NexoColors.surface,
+                            valueColor:
+                                const AlwaysStoppedAnimation(NexoColors.success),
+                            minHeight: 6,
                           ),
-                          child: const Icon(Icons.delete_outline_rounded,
-                              color: NexoColors.error),
                         ),
-                        onDismissed: (_) => _deleteItem(index),
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(
-                              vertical: 2, horizontal: 8),
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              onTap: () => _toggleItem(index),
-                              borderRadius: NexoShapes.small,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 12),
-                                child: Row(
-                                  children: [
-                                    AnimatedSwitcher(
-                                      duration:
-                                          const Duration(milliseconds: 200),
-                                      child: Icon(
-                                        item.isChecked
-                                            ? Icons.check_circle_rounded
-                                            : Icons
-                                                .radio_button_unchecked_rounded,
-                                        key: ValueKey(item.isChecked),
-                                        color: item.isChecked
-                                            ? NexoColors.success
-                                            : NexoColors.textMuted,
-                                        size: 22,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 14),
-                                    Expanded(
-                                      child: Text(
-                                        item.text,
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          color: item.isChecked
-                                              ? NexoColors.textMuted
-                                              : NexoColors.textMain,
-                                          decoration: item.isChecked
-                                              ? TextDecoration.lineThrough
-                                              : null,
-                                          fontWeight: item.isChecked
-                                              ? FontWeight.w400
-                                              : FontWeight.w500,
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        '$checked/$total',
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w800,
+                          color: NexoColors.textSub,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+              // Items list
+              Expanded(
+                child: _items.isEmpty
+                    ? _buildEmptyState()
+                    : ReorderableListView.builder(
+                        padding: const EdgeInsets.fromLTRB(8, 0, 8, 100),
+                        itemCount: _items.length,
+                        onReorder: (oldIndex, newIndex) {
+                          setState(() {
+                            if (newIndex > oldIndex) newIndex--;
+                            final item = _items.removeAt(oldIndex);
+                            _items.insert(newIndex, item);
+                            for (int i = 0; i < _items.length; i++) {
+                              _items[i] = _items[i].copyWith(order: i);
+                            }
+                          });
+                          _autoSave();
+                        },
+                        itemBuilder: (context, index) {
+                          final item = _items[index];
+                          return Dismissible(
+                            key: ValueKey(item.id),
+                            direction: DismissDirection.endToStart,
+                            background: Container(
+                              alignment: Alignment.centerRight,
+                              padding: const EdgeInsets.only(right: 24),
+                              margin: const EdgeInsets.symmetric(vertical: 2),
+                              decoration: BoxDecoration(
+                                color: NexoColors.error.withValues(alpha: 0.1),
+                                borderRadius: NexoShapes.small,
+                              ),
+                              child: const Icon(Icons.delete_outline_rounded,
+                                  color: NexoColors.error),
+                            ),
+                            onDismissed: (_) => _deleteItem(index),
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(
+                                  vertical: 2, horizontal: 8),
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: () => _toggleItem(index),
+                                  borderRadius: NexoShapes.small,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 12),
+                                    child: Row(
+                                      children: [
+                                        AnimatedSwitcher(
+                                          duration:
+                                              const Duration(milliseconds: 200),
+                                          child: Icon(
+                                            item.isChecked
+                                                ? Icons.check_circle_rounded
+                                                : Icons
+                                                    .radio_button_unchecked_rounded,
+                                            key: ValueKey(item.isChecked),
+                                            color: item.isChecked
+                                                ? NexoColors.success
+                                                : NexoColors.textMuted,
+                                            size: 22,
+                                          ),
                                         ),
-                                      ),
+                                        const SizedBox(width: 14),
+                                        Expanded(
+                                          child: Text(
+                                            item.text,
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                              color: item.isChecked
+                                                  ? NexoColors.textMuted
+                                                  : NexoColors.textMain,
+                                              decoration: item.isChecked
+                                                  ? TextDecoration.lineThrough
+                                                  : null,
+                                              fontWeight: item.isChecked
+                                                  ? FontWeight.w400
+                                                  : FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                        const Icon(Icons.drag_handle_rounded,
+                                            size: 18,
+                                            color: NexoColors.surfaceDark),
+                                      ],
                                     ),
-                                    const Icon(Icons.drag_handle_rounded,
-                                        size: 18,
-                                        color: NexoColors.surfaceDark),
-                                  ],
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ),
-                      )
-                          .animate(key: ValueKey(item.id))
-                          .fadeIn(duration: 200.ms);
-                    },
-                  ),
-          ),
+                          )
+                              .animate(key: ValueKey(item.id))
+                              .fadeIn(duration: 200.ms);
+                        },
+                      ),
+              ),
 
-          // Add item bar (siempre visible)
-          Container(
-            padding: const EdgeInsets.fromLTRB(16, 8, 8, 20),
-            decoration: BoxDecoration(
-              color: NexoColors.white,
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.03),
-                    blurRadius: 4,
-                    offset: const Offset(0, -2))
-              ],
-            ),
-            child: Row(
-              children: [
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8),
-                  child: Icon(Icons.add_rounded,
-                      color: NexoColors.success, size: 28),
+              // Add item bar (siempre visible)
+              Container(
+                padding: const EdgeInsets.fromLTRB(16, 8, 8, 20),
+                decoration: BoxDecoration(
+                  color: NexoColors.white,
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.03),
+                        blurRadius: 4,
+                        offset: const Offset(0, -2))
+                  ],
                 ),
-                Expanded(
-                  child: TextField(
-                    controller: _addItemController,
-                    focusNode: _addItemFocus,
-                    style: const TextStyle(fontSize: 16),
-                    decoration: const InputDecoration(
-                      hintText: 'Añadir artículo...',
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 8),
-                      isDense: true,
-                      hintStyle: TextStyle(color: NexoColors.textMuted),
+                child: Row(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8),
+                      child: Icon(Icons.add_rounded,
+                          color: NexoColors.success, size: 28),
                     ),
-                    onSubmitted: (_) => _addItem(),
-                    textInputAction: TextInputAction.done,
-                  ),
+                    Expanded(
+                      child: TextField(
+                        controller: _addItemController,
+                        focusNode: _addItemFocus,
+                        style: const TextStyle(fontSize: 16),
+                        decoration: const InputDecoration(
+                          hintText: 'Añadir artículo...',
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 8),
+                          isDense: true,
+                          hintStyle: TextStyle(color: NexoColors.textMuted),
+                        ),
+                        onSubmitted: (_) => _addItem(),
+                        textInputAction: TextInputAction.done,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: _addItem,
+                      icon: const Icon(Icons.send_rounded,
+                          color: NexoColors.success, size: 22),
+                    ),
+                  ],
                 ),
-                IconButton(
-                  onPressed: _addItem,
-                  icon: const Icon(Icons.send_rounded,
-                      color: NexoColors.success, size: 22),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

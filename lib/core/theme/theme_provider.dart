@@ -10,16 +10,14 @@ class ThemeController extends _$ThemeController {
 
   @override
   ThemeMode build() {
-    _loadTheme();
-    return ThemeMode.system; // Default inicial
-  }
-
-  Future<void> _loadTheme() async {
-    final prefs = await SharedPreferences.getInstance();
-    final index = prefs.getInt(_themeKey);
-    if (index != null && index >= 0 && index < ThemeMode.values.length) {
-      state = ThemeMode.values[index];
-    }
+    // Intentamos cargar el tema de forma asíncrona pero sin bloquear el build
+    SharedPreferences.getInstance().then((prefs) {
+      final index = prefs.getInt(_themeKey);
+      if (index != null) {
+        state = ThemeMode.values[index];
+      }
+    });
+    return ThemeMode.system;
   }
 
   Future<void> setThemeMode(ThemeMode mode) async {

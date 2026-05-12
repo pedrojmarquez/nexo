@@ -13,83 +13,111 @@ class LoginPage extends ConsumerWidget {
     final authState = ref.watch(authControllerProvider);
 
     return Scaffold(
-      backgroundColor: NexoColors.white,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Logo Premium
-              const Center(
-                child: Icon(Icons.blur_on_rounded,
-                    size: 80, color: NexoColors.primaryDark),
-              ).animate().scale(duration: 800.ms, curve: Curves.elasticOut),
-
-              const SizedBox(height: 32),
-
-              const Text(
-                'NEXO',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.w900,
-                  color: NexoColors.textMain,
-                  letterSpacing: 8,
-                ),
-              ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.2),
-
-              const SizedBox(height: 12),
-
-              const Text(
-                'Intelligent Personal Ecosystem',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: NexoColors.textSub,
-                  letterSpacing: 1.0,
-                  fontWeight: FontWeight.w500,
-                ),
-              ).animate().fadeIn(delay: 400.ms),
-
-              const SizedBox(height: 80),
-
-              if (authState.isLoading)
-                const Center(
-                    child: CircularProgressIndicator(
-                        color: NexoColors.primaryDark))
-              else ...[
-                ElevatedButton.icon(
-                  onPressed: () => ref
-                      .read(authControllerProvider.notifier)
-                      .signInWithGoogle(),
-                  icon: const Icon(Icons.login_rounded, size: 20),
-                  label: const Text(
-                    'CONTINUE WITH GOOGLE',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w900, letterSpacing: 1.0),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: NexoColors.primary,
-                    foregroundColor: NexoColors.textMain,
-                    padding: const EdgeInsets.symmetric(vertical: 18),
-                    shape:
-                        RoundedRectangleBorder(borderRadius: NexoShapes.full),
-                    elevation: 4,
-                    shadowColor: NexoColors.primary.withValues(alpha: 0.2),
-                  ),
-                ).animate().fadeIn(delay: 600.ms).slideY(begin: 0.2),
-                const SizedBox(height: 24),
-                TextButton(
-                  onPressed: () {},
-                  child: const Text(
-                    'Terms & Privacy',
-                    style: TextStyle(color: NexoColors.textMuted, fontSize: 12),
-                  ),
-                ).animate().fadeIn(delay: 800.ms),
-              ],
+      backgroundColor: NexoColors.background,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              NexoColors.primary.withValues(alpha: 0.1),
+              NexoColors.background,
             ],
+          ),
+        ),
+        child: SafeArea(
+          child: Center(
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 500),
+              padding: const EdgeInsets.symmetric(horizontal: 40),
+              child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Spacer(),
+                // Logo con sombra y presencia
+                Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: NexoColors.primary.withValues(alpha: 0.2),
+                          blurRadius: 40,
+                          spreadRadius: 10,
+                        )
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: NexoShapes.xLarge,
+                      child: Image.asset(
+                        'assets/images/logo.png',
+                        width: 140,
+                        height: 140,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ).animate().scale(duration: 1.seconds, curve: Curves.elasticOut).fadeIn(),
+
+                const SizedBox(height: 32),
+
+                const Text(
+                  'NEXO',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 42,
+                    fontWeight: FontWeight.w900,
+                    color: NexoColors.textMain,
+                    letterSpacing: 12,
+                  ),
+                ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.2),
+
+                const Text(
+                  'Tu Ecosistema Inteligente',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: NexoColors.textSub,
+                    letterSpacing: 1.5,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ).animate().fadeIn(delay: 500.ms),
+
+                const Spacer(),
+
+                if (authState.isLoading)
+                  const Center(child: CircularProgressIndicator(color: NexoColors.primaryDark))
+                else ...[
+                  ElevatedButton.icon(
+                    onPressed: () => ref.read(authControllerProvider.notifier).signInWithGoogle(),
+                    icon: Image.network('https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg', width: 20, height: 20, errorBuilder: (_, __, ___) => const Icon(Icons.login_rounded)),
+                    label: const Text(
+                      'ENTRAR CON GOOGLE',
+                      style: TextStyle(fontWeight: FontWeight.w900, letterSpacing: 1.5),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: NexoColors.white,
+                      foregroundColor: NexoColors.textMain,
+                      padding: const EdgeInsets.symmetric(vertical: 18),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: NexoShapes.medium,
+                        side: const BorderSide(color: NexoColors.divider),
+                      ),
+                      elevation: 4,
+                    ),
+                  ).animate().fadeIn(delay: 700.ms).slideY(begin: 0.3),
+                  
+                  const SizedBox(height: 24),
+                  
+                  const Text(
+                    'Gestión de notas, comidas y recordatorios\ntodo en un solo lugar.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: NexoColors.textMuted, fontSize: 12, height: 1.5),
+                  ).animate().fadeIn(delay: 900.ms),
+                ],
+                const SizedBox(height: 40),
+              ],
+            ),
           ),
         ),
       ),

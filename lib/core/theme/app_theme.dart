@@ -18,10 +18,8 @@ class NexoTheme {
       ),
       textTheme: GoogleFonts.outfitTextTheme(
         ThemeData.light().textTheme.copyWith(
-              displayLarge: const TextStyle(
-                  color: NexoColors.textMain, fontWeight: FontWeight.w800),
-              titleLarge: const TextStyle(
-                  color: NexoColors.textMain, fontWeight: FontWeight.w700),
+              displayLarge: const TextStyle(color: NexoColors.textMain, fontWeight: FontWeight.w800),
+              titleLarge: const TextStyle(color: NexoColors.textMain, fontWeight: FontWeight.w700),
               bodyLarge: const TextStyle(color: NexoColors.textMain),
               bodyMedium: const TextStyle(color: NexoColors.textSub),
             ),
@@ -30,11 +28,7 @@ class NexoTheme {
         backgroundColor: NexoColors.background,
         elevation: 0,
         centerTitle: true,
-        titleTextStyle: TextStyle(
-          color: NexoColors.textMain,
-          fontSize: 20,
-          fontWeight: FontWeight.w800,
-        ),
+        titleTextStyle: TextStyle(color: NexoColors.textMain, fontSize: 20, fontWeight: FontWeight.w800),
         iconTheme: IconThemeData(color: NexoColors.textMain),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -46,27 +40,45 @@ class NexoTheme {
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         ),
       ),
-      inputDecorationTheme: InputDecorationTheme(
-        filled: true,
-        fillColor: NexoColors.white,
-        border: OutlineInputBorder(
-          borderRadius: NexoShapes.medium,
-          borderSide: BorderSide(color: NexoColors.divider),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: NexoShapes.medium,
-          borderSide: const BorderSide(color: NexoColors.divider),
-        ),
-        hintStyle: const TextStyle(color: NexoColors.textMuted),
-      ),
-      pageTransitionsTheme: const PageTransitionsTheme(
-        builders: {
-          TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
-          TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-        },
-      ),
     );
   }
 
-  static ThemeData get dark => light; // Por ahora igualamos para consistencia
+  static ThemeData get dark {
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.dark,
+      scaffoldBackgroundColor: const Color(0xFF0F0F0F),
+      colorScheme: const ColorScheme.dark(
+        primary: NexoColors.primary,
+        secondary: NexoColors.secondary,
+        surface: Color(0xFF1E1E1E),
+        error: NexoColors.error,
+        onPrimary: NexoColors.textMain,
+      ),
+      textTheme: GoogleFonts.outfitTextTheme(
+        ThemeData.dark().textTheme.copyWith(
+              displayLarge: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800),
+              titleLarge: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+              bodyLarge: const TextStyle(color: Color(0xFFE0E0E0)),
+              bodyMedium: const TextStyle(color: Color(0xFFB0B0B0)),
+            ),
+      ),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Color(0xFF0F0F0F),
+        elevation: 0,
+        centerTitle: true,
+        titleTextStyle: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w800),
+        iconTheme: IconThemeData(color: Colors.white),
+      ),
+      cardTheme: CardThemeData(
+        color: const Color(0xFF1E1E1E),
+        shape: RoundedRectangleBorder(borderRadius: NexoShapes.medium),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: const Color(0xFF1E1E1E),
+        border: OutlineInputBorder(borderRadius: NexoShapes.medium, borderSide: BorderSide.none),
+      ),
+    );
+  }
 }

@@ -44,9 +44,10 @@ GoRouter appRouter(Ref ref) {
 
       final isLoggedIn = authValue.valueOrNull != null;
       final isOnLogin = state.matchedLocation == '/login';
+      final isRoot = state.matchedLocation == '/';
 
       if (!isLoggedIn && !isOnLogin) return '/login';
-      if (isLoggedIn && isOnLogin) return '/notas';
+      if (isLoggedIn && (isOnLogin || isRoot)) return '/notas';
       return null;
     },
     routes: [
