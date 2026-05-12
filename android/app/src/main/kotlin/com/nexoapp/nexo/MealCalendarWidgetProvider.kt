@@ -16,10 +16,14 @@ class MealCalendarWidgetProvider : HomeWidgetProvider() {
     ) {
         appWidgetIds.forEach { widgetId ->
             val views = RemoteViews(context.packageName, R.layout.widget_meal).apply {
-                val dayName = widgetData.getString("meal_today_name", "Today")
+                val dayName = widgetData.getString("meal_today_name", "Hoy")
                 val mealsJsonString = widgetData.getString("meal_today_items", "[]")
 
-                setTextViewText(R.id.tv_title, "$dayName's Meals")
+                if (dayName == "Hoy") {
+                    setTextViewText(R.id.tv_title, "Comidas de Hoy")
+                } else {
+                    setTextViewText(R.id.tv_title, "Comidas del $dayName")
+                }
 
                 var mealsText = ""
                 try {
@@ -29,19 +33,19 @@ class MealCalendarWidgetProvider : HomeWidgetProvider() {
                         val slot = obj.getString("slot")
                         val name = obj.getString("name")
                         val emoji = when(slot.lowercase()) {
-                            "breakfast" -> "🌅"
-                            "lunch" -> "☀️"
-                            "dinner" -> "🌙"
-                            "snack" -> "🍎"
-                            else -> "🍽️"
+                            "breakfast" -> "\u2615" // Coffee ☕
+                            "lunch" -> "\uD83C\uDF72" // Stew 🍲
+                            "dinner" -> "\uD83C\uDF19" // Moon 🌙
+                            "snack" -> "\uD83C\uDF4E" // Apple 🍎
+                            else -> "\uD83C\uDF7D\uFE0F" // Plate 🍽️
                         }
                         mealsText += "$emoji $name\n"
                     }
                     if (mealsText.isEmpty()) {
-                        mealsText = "No meals planned for today.\nOpen Nexo to plan your day!"
+                        mealsText = "No hay comidas planeadas.\n¡Abre Nexo para planificarlas!"
                     }
                 } catch (e: Exception) {
-                    mealsText = "Error loading meals"
+                    mealsText = "Error al cargar las comidas"
                 }
 
                 setTextViewText(R.id.tv_meals, mealsText.trim())

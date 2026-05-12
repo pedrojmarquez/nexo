@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nexo/features/notes/domain/note_model.dart';
@@ -21,9 +21,9 @@ class HomeWidgetService {
             'postit_color', note.accentColor ?? '#FFF176');
       } else {
         await HomeWidget.saveWidgetData<String>(
-            'postit_title', 'No quick note');
+            'postit_title', 'Sin post-it rápido');
         await HomeWidget.saveWidgetData<String>(
-            'postit_content', 'Tap + to add a post-it in Nexo');
+            'postit_content', 'Pulsa + para añadir un post-it en Nexo');
         await HomeWidget.saveWidgetData<String>('postit_color', '#FFF176');
       }
       await HomeWidget.updateWidget(name: 'PostItWidgetProvider');
@@ -52,7 +52,7 @@ class HomeWidgetService {
             'shopping_remaining_count', activeItems.length);
       } else {
         await HomeWidget.saveWidgetData<String>(
-            'shopping_title', 'Shopping List');
+            'shopping_title', 'Lista de la compra');
         await HomeWidget.saveWidgetData<String>('shopping_items', '[]');
         await HomeWidget.saveWidgetData<String>('shopping_progress', '0/0');
         await HomeWidget.saveWidgetData<int>('shopping_remaining_count', 0);
@@ -85,7 +85,7 @@ class HomeWidgetService {
             'meal_today_name', _getDayName(todayWeekday));
         await HomeWidget.saveWidgetData<String>('meal_today_items', mealsJson);
       } else {
-        await HomeWidget.saveWidgetData<String>('meal_today_name', 'Today');
+        await HomeWidget.saveWidgetData<String>('meal_today_name', 'Hoy');
         await HomeWidget.saveWidgetData<String>('meal_today_items', '[]');
       }
       await HomeWidget.updateWidget(name: 'MealCalendarWidgetProvider');
@@ -96,20 +96,13 @@ class HomeWidgetService {
 
   static String _getDayName(Weekday day) {
     switch (day) {
-      case Weekday.monday:
-        return 'Monday';
-      case Weekday.tuesday:
-        return 'Tuesday';
-      case Weekday.wednesday:
-        return 'Wednesday';
-      case Weekday.thursday:
-        return 'Thursday';
-      case Weekday.friday:
-        return 'Friday';
-      case Weekday.saturday:
-        return 'Saturday';
-      case Weekday.sunday:
-        return 'Sunday';
+      case Weekday.monday: return 'Lunes';
+      case Weekday.tuesday: return 'Martes';
+      case Weekday.wednesday: return 'Miércoles';
+      case Weekday.thursday: return 'Jueves';
+      case Weekday.friday: return 'Viernes';
+      case Weekday.saturday: return 'Sábado';
+      case Weekday.sunday: return 'Domingo';
     }
   }
 }

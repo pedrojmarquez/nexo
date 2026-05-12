@@ -16,7 +16,7 @@ class ShoppingWidgetProvider : HomeWidgetProvider() {
     ) {
         appWidgetIds.forEach { widgetId ->
             val views = RemoteViews(context.packageName, R.layout.widget_shopping).apply {
-                val title = widgetData.getString("shopping_title", "Shopping List")
+                val title = widgetData.getString("shopping_title", "Lista de Compra")
                 val progress = widgetData.getString("shopping_progress", "0/0")
                 val itemsJsonString = widgetData.getString("shopping_items", "[]")
                 val remainingCount = widgetData.getInt("shopping_remaining_count", 0)
@@ -28,16 +28,16 @@ class ShoppingWidgetProvider : HomeWidgetProvider() {
                 try {
                     val jsonArray = JSONArray(itemsJsonString)
                     for (i in 0 until jsonArray.length()) {
-                        itemsText += "• ${jsonArray.getString(i)}\n"
+                        itemsText += "\u2022 ${jsonArray.getString(i)}\n"
                     }
                     if (remainingCount > 5) {
-                        itemsText += "...and ${remainingCount - 5} more"
+                        itemsText += "...y ${remainingCount - 5} más"
                     }
                     if (itemsText.isEmpty()) {
-                        itemsText = "All done! \uD83C\uDF89"
+                        itemsText = "¡Todo listo! \uD83C\uDF89"
                     }
                 } catch (e: Exception) {
-                    itemsText = "Error loading items"
+                    itemsText = "Error al cargar la lista"
                 }
 
                 setTextViewText(R.id.tv_items, itemsText.trim())
