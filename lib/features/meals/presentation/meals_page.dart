@@ -72,7 +72,7 @@ class _MealsPageState extends ConsumerState<MealsPage> {
     return Scaffold(
       backgroundColor: NexoColors.background,
       appBar: AppBar(
-        title: const Text('Meal Planner'),
+        title: const Text('Comidas'),
         actions: [
           IconButton(
             icon: const Icon(Icons.add_circle_outline_rounded),
@@ -118,32 +118,35 @@ class _MealsPageState extends ConsumerState<MealsPage> {
 
         // ── Carrusel de días (abajo, más grande) ────────────────
         Expanded(
-          child: PageView.builder(
-            controller: _pageController,
-            onPageChanged: (index) {
-              setState(() => _selectedDayIndex = index);
-            },
-            itemCount: 7,
-            itemBuilder: (context, index) {
-              final weekday = _weekdayFromIndex(index);
-              final dayDate = weekStart.add(Duration(days: index));
-              final dayMeals =
-                  plan?.meals.where((m) => m.weekday == weekday).toList() ?? [];
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 100), // Evita solapamiento con footer
+            child: PageView.builder(
+              controller: _pageController,
+              onPageChanged: (index) {
+                setState(() => _selectedDayIndex = index);
+              },
+              itemCount: 7,
+              itemBuilder: (context, index) {
+                final weekday = _weekdayFromIndex(index);
+                final dayDate = weekStart.add(Duration(days: index));
+                final dayMeals =
+                    plan?.meals.where((m) => m.weekday == weekday).toList() ?? [];
 
-              // Sort by slot order
-              dayMeals.sort((a, b) => a.slot.index.compareTo(b.slot.index));
+                // Sort by slot order
+                dayMeals.sort((a, b) => a.slot.index.compareTo(b.slot.index));
 
-              return DayDetailCard(
-                date: dayDate,
-                weekday: weekday,
-                meals: dayMeals,
-                planId: plan?.id,
-                onAddMeal: () => _showAddMeal(context, weekday: weekday),
-              ).animate().fadeIn(duration: 200.ms).scale(
-                    begin: const Offset(0.96, 0.96),
-                    curve: Curves.easeOut,
-                  );
-            },
+                return DayDetailCard(
+                  date: dayDate,
+                  weekday: weekday,
+                  meals: dayMeals,
+                  planId: plan?.id,
+                  onAddMeal: () => _showAddMeal(context, weekday: weekday),
+                ).animate().fadeIn(duration: 200.ms).scale(
+                      begin: const Offset(0.96, 0.96),
+                      curve: Curves.easeOut,
+                    );
+              },
+            ),
           ),
         ),
       ],

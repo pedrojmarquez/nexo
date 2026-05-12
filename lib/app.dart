@@ -8,6 +8,7 @@ import 'package:nexo/features/notes/domain/note_model.dart';
 import 'package:nexo/features/notes/presentation/providers/notes_provider.dart';
 import 'package:nexo/features/meals/presentation/providers/meals_provider.dart';
 import 'package:nexo/core/services/home_widget_service.dart';
+import 'package:nexo/core/theme/theme_provider.dart';
 
 /// ─────────────────────────────────────────────────────────────────────────────
 /// NexoApp — Widget raíz. Usa GoRouter generado por Riverpod.
@@ -42,13 +43,14 @@ class NexoApp extends ConsumerWidget {
     });
 
     final router = ref.watch(appRouterProvider);
+    final themeMode = ref.watch(themeControllerProvider);
 
     return MaterialApp.router(
       title: 'Nexo',
       debugShowCheckedModeBanner: false,
       theme: NexoTheme.light,
       darkTheme: NexoTheme.dark,
-      themeMode: ThemeMode.system,
+      themeMode: themeMode,
       routerConfig: router,
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,

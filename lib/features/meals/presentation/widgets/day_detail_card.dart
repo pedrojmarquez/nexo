@@ -263,14 +263,12 @@ class _DayDetailCardState extends ConsumerState<DayDetailCard> {
                     Expanded(
                       child: _ActionButton(
                         icon: Icons.menu_book_rounded,
-                        label: hasRecipe ? 'View Recipe' : 'Generate Recipe',
+                        label: hasRecipe ? 'Ver Receta' : 'Generar Receta',
                         color: NexoColors.primaryDark,
                         isLoading: false,
                         onTap: () async {
-                          if (hasRecipe && !isRecipeExpanded) {
-                            setState(() => _expandedRecipes.add(meal.id));
-                          } else if (hasRecipe && isRecipeExpanded) {
-                            setState(() => _expandedRecipes.remove(meal.id));
+                          if (hasRecipe) {
+                            RecipeModal.show(context, meal.aiGeneratedRecipe ?? meal.recipe, slotLabel);
                           } else {
                             await _generateRecipe(meal);
                           }
@@ -282,70 +280,31 @@ class _DayDetailCardState extends ConsumerState<DayDetailCard> {
                       child: _ActionButton(
                         icon: Icons.shopping_basket_outlined,
                         label: hasIngredients
-                            ? 'View Ingredients'
-                            : 'List Ingredients',
+                            ? 'Ingredientes'
+                            : 'Lista Compra',
                         color: NexoColors.success,
                         isLoading: false,
                         onTap: () async {
-                          if (hasIngredients && !isIngredientsExpanded) {
-                            setState(() => _expandedIngredients.add(meal.id));
-                          } else if (hasIngredients && isIngredientsExpanded) {
-                            setState(
-                                () => _expandedIngredients.remove(meal.id));
+                          if (hasIngredients) {
+                            IngredientsModal.show(context, meal);
                           } else {
                             await _generateIngredients(meal);
                           }
                         },
                       ),
                     ),
+                    const SizedBox(width: 8),
+                    _ActionButton(
+                      icon: Icons.delete_outline_rounded,
+                      color: NexoColors.error,
+                      isIconOnly: true,
+                      onTap: () => _removeMeal(meal.id),
+                    ),
                   ],
                 ),
               ],
             ),
           ),
-
-          // ── Expanded Recipe ──────────────────────────────────────
-          if (isRecipeExpanded && hasRecipe)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
-              child: RecipeView(
-                recipe: meal.aiGeneratedRecipe!,
-                onRegenerate: () => _generateRecipe(meal),
-              ),
-            ),
-
-          // ── Expanded Ingredients ─────────────────────────────────
-          if (isIngredientsExpanded && hasIngredients)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
-              child: IngredientsView(
-                ingredients: meal.aiGeneratedIngredients!,
-                onRegenerate: () => _generateIngredients(meal),
-                onAddToShoppingList: (text) async {
-                  await ref
-                      .read(mealsControllerProvider.notifier)
-                      .addIngredientToShoppingList(text);
-                  if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                          content: Text('Added: $text'),
-                          duration: const Duration(seconds: 1)),
-                    );
-                  }
-                },
-                onAddAllMissing: (ingredients) async {
-                  await ref
-                      .read(mealsControllerProvider.notifier)
-                      .addAllMissingIngredients(ingredients);
-                  if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content: Text('All missing ingredients added!')),
-                    );
-                  }
-                },
-              ),
-            ),
         ],
       ),
     );

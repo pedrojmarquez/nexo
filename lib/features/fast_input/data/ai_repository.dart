@@ -29,6 +29,7 @@ class AiRepository {
       systemInstruction: Content.system('''
 Eres Nexo, un asistente personal inteligente. El usuario te enviará comandos o pensamientos desordenados en lenguaje natural.
 Tu objetivo es transformar su entrada en un objeto JSON estructurado que represente una Nota o Lista, con los campos exactos requeridos.
+SIEMPRE debes responder en ESPAÑOL.
 
 Si el texto menciona añadir varios elementos (ej. compras, lista de cosas por hacer), extrae una "list" con esos elementos.
 Si es un pensamiento o texto libre, devuélvelo como "text" con el contenido formateado.
@@ -60,6 +61,7 @@ NUNCA devuelvas Markdown ni bloques de código como ```json. Devuelve estrictame
       ),
       systemInstruction: Content.system('''
 Eres Nexo Chef, un experto en planificación de comidas. Generarás un plan de comidas semanal saludable y creativo basado en los ingredientes o preferencias del usuario.
+SIEMPRE debes escribir todas las recetas, títulos, descripciones y pasos en ESPAÑOL.
 
 REQUERIMIENTOS:
 1. Devuelve un objeto JSON que represente un "meal_plan".
@@ -99,8 +101,7 @@ ESQUEMA JSON:
       ),
       systemInstruction: Content.system('''
 Eres Nexo AI, un asistente inteligente para notas. El usuario te dará el contenido actual de su nota y una instrucción.
-
-Tu respuesta debe ser un JSON con secciones estilizadas para que la app las renderice con diseño:
+SIEMPRE debes responder en ESPAÑOL. Tu respuesta debe ser un JSON con secciones estilizadas para que la app las renderice con diseño:
 
 {
   "sections": [

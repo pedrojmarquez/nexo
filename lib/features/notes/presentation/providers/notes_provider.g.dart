@@ -41,7 +41,7 @@ final userNotesProvider = AutoDisposeStreamProvider<List<NexoNote>>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef UserNotesRef = AutoDisposeStreamProviderRef<List<NexoNote>>;
-String _$notesControllerHash() => r'07461f0fe611b6c2ee479dd5a0bcc837d6e191c1';
+String _$notesControllerHash() => r'8f08828b62477ba8d7a26ef0703994e20cacfa43';
 
 /// Controlador para crear/editar notas de forma asíncrona
 ///
