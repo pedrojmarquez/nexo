@@ -240,6 +240,7 @@ class MealsController extends _$MealsController {
         ),
       );
 
+      final updatedMeals = [...plan.meals, newMeal];
       final updatedPlan = plan.copyWith(meals: updatedMeals);
       await repo.updateMealPlan(updatedPlan);
 
@@ -257,13 +258,13 @@ class MealsController extends _$MealsController {
     state = const AsyncValue.loading();
     try {
       final repo = ref.read(mealsRepositoryProvider);
+      final currentPlan = ref.read(activeMealPlanProvider).valueOrNull;
+      
       await repo.removeMealFromPlan(planId, mealId);
       
-      // Intentamos refrescar el widget (aunque no tenemos el plan completo aquí, el listener en app.dart lo hará)
-      // pero por si acaso, si podemos obtener el plan actual lo hacemos.
-      final currentPlan = ref.read(activeMealPlanProvider).valueOrNull;
       if (currentPlan != null && currentPlan.id == planId) {
-        final updatedPlan = currentPlan.copyWith(meals: currentPlan.meals.where((m) => m.id != mealId).toList());
+        final updatedMeals = currentPlan.meals.where((m) => m.id != mealId).toList();
+        final updatedPlan = currentPlan.copyWith(meals: updatedMeals);
         HomeWidgetService.updateMealCalendarWidget(updatedPlan);
       }
 

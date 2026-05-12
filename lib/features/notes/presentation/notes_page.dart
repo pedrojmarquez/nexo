@@ -117,52 +117,46 @@ class _NotesPageState extends ConsumerState<NotesPage> {
             return dateB.compareTo(dateA);
           });
 
-          return Center(
-            child: Container(
-              constraints: const BoxConstraints(maxWidth: 1000),
-              child: Column(
-                children: [
-                  // Filter chips
-                  _buildFilterChips(),
+          return Column(
+            children: [
+              // Filter chips
+              _buildFilterChips(),
 
-                  // Notes grid
-                  Expanded(
-                    child: filteredNotes.isEmpty
-                        ? _buildEmptyState()
-                        : LayoutBuilder(
-                            builder: (context, constraints) {
-                              final crossAxisCount = constraints.maxWidth > 900
-                                  ? 4
-                                  : (constraints.maxWidth > 600 ? 3 : 2);
-                              return MasonryGridView.count(
-                                crossAxisCount: crossAxisCount,
-                                mainAxisSpacing: 10,
-                                crossAxisSpacing: 10,
-                                padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
-                                itemCount: filteredNotes.length,
-                                itemBuilder: (context, index) {
-                                  final note = filteredNotes[index];
-                                  return NoteCard(
-                                    key: ValueKey(note.id),
-                                    note: note,
-                                    onTap: () => _openNote(note),
-                                    onLongPress: () => _showContextMenu(context, note),
-                                  ).animate().fadeIn(delay: (index * 40).ms).scale(
-                                        begin: const Offset(0.95, 0.95),
-                                        duration: 300.ms,
-                                        curve: Curves.easeOut,
-                                      );
-                                },
-                              );
-                    },
-                  ),
-          ),
-                ],
+              // Notes grid
+              Expanded(
+                child: filteredNotes.isEmpty
+                    ? _buildEmptyState()
+                    : LayoutBuilder(
+                        builder: (context, constraints) {
+                          final crossAxisCount = constraints.maxWidth > 900
+                              ? 4
+                              : (constraints.maxWidth > 600 ? 3 : 2);
+                          return MasonryGridView.count(
+                            crossAxisCount: crossAxisCount,
+                            mainAxisSpacing: 10,
+                            crossAxisSpacing: 10,
+                            padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
+                            itemCount: filteredNotes.length,
+                            itemBuilder: (context, index) {
+                              final note = filteredNotes[index];
+                              return NoteCard(
+                                key: ValueKey(note.id),
+                                note: note,
+                                onTap: () => _openNote(note),
+                                onLongPress: () => _showContextMenu(context, note),
+                              ).animate().fadeIn(delay: (index * 40).ms).scale(
+                                    begin: const Offset(0.95, 0.95),
+                                    duration: 300.ms,
+                                    curve: Curves.easeOut,
+                                  );
+                            },
+                          );
+                        },
+                      ),
               ),
-            ),
-          ),
-        );
-      },
+            ],
+          );
+        },
         loading: () => const Center(
           child: CircularProgressIndicator(color: NexoColors.primaryDark),
         ),
@@ -315,11 +309,10 @@ class _NotesPageState extends ConsumerState<NotesPage> {
                 Navigator.pop(context);
                 _confirmDelete(context, note, isOwner);
               },
-              ],
-            );
-          },
-        );
-      },
+            ),
+          ],
+        ),
+      ),
     );
   }
 

@@ -62,31 +62,9 @@ GoRouter appRouter(Ref ref) {
         ),
       ),
       // ── Shell con NavigationBar (3 módulos) ────────────────────────────
-      StatefulShellRoute(
+      StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) =>
             HomeShell(navigationShell: navigationShell),
-        navigatorContainerBuilder: (context, navigationShell, children) {
-          return AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
-            switchInCurve: Curves.easeOut,
-            switchOutCurve: Curves.easeIn,
-            transitionBuilder: (child, animation) => FadeTransition(
-              opacity: animation,
-              child: SlideTransition(
-                position: Tween<Offset>(
-                  begin: const Offset(0.0, 0.02),
-                  end: Offset.zero,
-                ).animate(animation),
-                child: child,
-              ),
-            ),
-            child: IndexedStack(
-              key: ValueKey<int>(navigationShell.currentIndex),
-              index: navigationShell.currentIndex,
-              children: children,
-            ),
-          );
-        },
         branches: [
           StatefulShellBranch(routes: [
             GoRoute(

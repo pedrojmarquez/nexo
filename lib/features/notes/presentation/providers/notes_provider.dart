@@ -55,7 +55,7 @@ class NotesController extends _$NotesController {
       final newId = await ref.read(notesRepositoryProvider).createNote(note);
 
       // Sincronizar widgets
-      final updatedNotes = [...ref.read(userNotesProvider).valueOrNull ?? [], note.copyWith(id: newId)];
+      final updatedNotes = [...ref.read(userNotesProvider).valueOrNull ?? <NexoNote>[], note.copyWith(id: newId)];
       HomeWidgetService.updateDailyBoardWidget(updatedNotes);
       if (noteSubType == 'post_it') {
         HomeWidgetService.updatePostItWidget(note.copyWith(id: newId));
@@ -96,7 +96,7 @@ class NotesController extends _$NotesController {
       final newId = await ref.read(notesRepositoryProvider).createNote(note);
 
       // Sincronizar widgets
-      final updatedNotes = [...ref.read(userNotesProvider).valueOrNull ?? [], note.copyWith(id: newId)];
+      final updatedNotes = [...ref.read(userNotesProvider).valueOrNull ?? <NexoNote>[], note.copyWith(id: newId)];
       HomeWidgetService.updateDailyBoardWidget(updatedNotes);
       if (isPrimary) {
         HomeWidgetService.updateShoppingListWidget(note.copyWith(id: newId));
@@ -110,7 +110,7 @@ class NotesController extends _$NotesController {
       await ref.read(notesRepositoryProvider).updateNote(note);
 
       // Sincronizar widgets
-      final currentNotes = ref.read(userNotesProvider).valueOrNull ?? [];
+      final currentNotes = ref.read(userNotesProvider).valueOrNull ?? <NexoNote>[];
       final updatedNotes = currentNotes.map((n) => n.id == note.id ? note : n).toList();
       HomeWidgetService.updateDailyBoardWidget(updatedNotes);
       if (note.noteSubType == 'post_it') {
@@ -157,7 +157,7 @@ class NotesController extends _$NotesController {
       }
 
       // Sincronizar widgets después de borrar
-      final updatedNotes = (ref.read(userNotesProvider).valueOrNull ?? []).where((n) => n.id != noteId).toList();
+      final updatedNotes = (ref.read(userNotesProvider).valueOrNull ?? <NexoNote>[]).where((n) => n.id != noteId).toList();
       HomeWidgetService.updateDailyBoardWidget(updatedNotes);
       if (note?.noteSubType == 'post_it') {
         HomeWidgetService.updatePostItWidget(null);
@@ -213,7 +213,7 @@ class NotesController extends _$NotesController {
       ));
 
       // Sincronizar widgets
-      final currentNotes = ref.read(userNotesProvider).valueOrNull ?? [];
+      final currentNotes = ref.read(userNotesProvider).valueOrNull ?? <NexoNote>[];
       final updatedNotes = currentNotes.map((n) => n.id == noteId ? selectedNote.copyWith(isPrimaryShoppingList: true) : n.copyWith(isPrimaryShoppingList: false)).toList();
       HomeWidgetService.updateDailyBoardWidget(updatedNotes);
       HomeWidgetService.updateShoppingListWidget(selectedNote.copyWith(isPrimaryShoppingList: true));

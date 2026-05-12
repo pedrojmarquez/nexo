@@ -26,14 +26,10 @@ class LoginPage extends ConsumerWidget {
           ),
         ),
         child: SafeArea(
-          child: Center(
-            child: Container(
-              constraints: const BoxConstraints(maxWidth: 500),
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
                 const Spacer(),
                 // Logo con sombra y presencia
                 Center(
@@ -120,7 +116,6 @@ class LoginPage extends ConsumerWidget {
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 }

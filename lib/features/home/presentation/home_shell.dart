@@ -24,12 +24,7 @@ class HomeShell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: NexoColors.background,
-      body: Center(
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: 1000),
-          child: navigationShell,
-        ),
-      ),
+      body: navigationShell,
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: NexoColors.white,
@@ -44,39 +39,34 @@ class HomeShell extends StatelessWidget {
             ),
           ],
         ),
-        child: Center(
-          child: Container(
-            constraints: const BoxConstraints(maxWidth: 800),
-            child: NavigationBar(
-              selectedIndex: navigationShell.currentIndex,
-              onDestinationSelected: _onTap,
-              backgroundColor: Colors.transparent,
-              indicatorColor: NexoColors.primary.withValues(alpha: 0.2),
-              elevation: 0,
-              destinations: const [
-                NavigationDestination(
-                  icon: Icon(Icons.note_alt_outlined, color: NexoColors.textMuted),
-                  selectedIcon:
-                      Icon(Icons.note_alt_rounded, color: NexoColors.textMain),
-                  label: 'Notas',
-                ),
-                NavigationDestination(
-                  icon:
-                      Icon(Icons.restaurant_outlined, color: NexoColors.textMuted),
-                  selectedIcon:
-                      Icon(Icons.restaurant_rounded, color: NexoColors.textMain),
-                  label: 'Comidas',
-                ),
-                NavigationDestination(
-                  icon: Icon(Icons.person_outline_rounded,
-                      color: NexoColors.textMuted),
-                  selectedIcon:
-                      Icon(Icons.person_rounded, color: NexoColors.textMain),
-                  label: 'Perfil',
-                ),
-              ],
+        child: NavigationBar(
+          selectedIndex: navigationShell.currentIndex,
+          onDestinationSelected: _onTap,
+          backgroundColor: Colors.transparent,
+          indicatorColor: NexoColors.primary.withValues(alpha: 0.2),
+          elevation: 0,
+          destinations: const [
+            NavigationDestination(
+              icon: Icon(Icons.note_alt_outlined, color: NexoColors.textMuted),
+              selectedIcon:
+                  Icon(Icons.note_alt_rounded, color: NexoColors.textMain),
+              label: 'Notas',
             ),
-          ),
+            NavigationDestination(
+              icon:
+                  Icon(Icons.restaurant_outlined, color: NexoColors.textMuted),
+              selectedIcon:
+                  Icon(Icons.restaurant_rounded, color: NexoColors.textMain),
+              label: 'Comidas',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.person_outline_rounded,
+                  color: NexoColors.textMuted),
+              selectedIcon:
+                  Icon(Icons.person_rounded, color: NexoColors.textMain),
+              label: 'Perfil',
+            ),
+          ],
         ),
       ),
     );

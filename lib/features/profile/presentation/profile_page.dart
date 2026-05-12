@@ -20,13 +20,10 @@ class ProfilePage extends ConsumerWidget {
         title: const Text('Perfil'),
         centerTitle: true,
       ),
-      body: Center(
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: 800),
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              children: [
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          children: [
             // User Header - Clean & Premium
             Container(
               width: double.infinity,
@@ -125,9 +122,7 @@ class ProfilePage extends ConsumerWidget {
             ],
           ),
         ),
-      ),
-    ),
-    );
+      );
   }
 
   Widget _buildSectionTitle(String title) => Align(alignment: Alignment.centerLeft, child: Text(title, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w900, color: NexoColors.textMuted, letterSpacing: 1.2)));
