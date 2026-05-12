@@ -1,0 +1,22 @@
+# Nexo — Git Ignore
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+
+# Credenciales y secretos
+.env
+google-services.json
+GoogleService-Info.plist
+firebase_options.dart
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# macOS
+.DS_Store

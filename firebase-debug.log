@@ -1,0 +1,77 @@
+[debug] [2026-05-11T21:37:49.180Z] ----------------------------------------------------------------------
+[debug] [2026-05-11T21:37:49.182Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Pedro J\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy --only firestore:indexes --project nexo-app-9f5f3
+[debug] [2026-05-11T21:37:49.182Z] CLI Version:   15.16.0
+[debug] [2026-05-11T21:37:49.183Z] Platform:      win32
+[debug] [2026-05-11T21:37:49.183Z] Node Version:  v20.19.5
+[debug] [2026-05-11T21:37:49.183Z] Time:          Mon May 11 2026 23:37:49 GMT+0200 (hora de verano de Europa central)
+[debug] [2026-05-11T21:37:49.183Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-05-11T21:37:50.343Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-05-11T21:37:50.343Z] > authorizing via signed-in user (pedroj2001@gmail.com)
+[debug] [2026-05-11T21:37:50.343Z] [iam] checking project nexo-app-9f5f3 for permissions ["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get"]
+[debug] [2026-05-11T21:37:50.344Z] Checked if tokens are valid: false, expires at: 1777850929263
+[debug] [2026-05-11T21:37:50.344Z] Checked if tokens are valid: false, expires at: 1777850929263
+[debug] [2026-05-11T21:37:50.345Z] > refreshing access token with scopes: []
+[debug] [2026-05-11T21:37:50.354Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2026-05-11T21:37:50.354Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-05-11T21:37:50.902Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2026-05-11T21:37:50.902Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-05-11T21:37:50.908Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/nexo-app-9f5f3:testIamPermissions [none]
+[debug] [2026-05-11T21:37:50.909Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/nexo-app-9f5f3:testIamPermissions  x-goog-user-project=nexo-app-9f5f3
+[debug] [2026-05-11T21:37:50.909Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/nexo-app-9f5f3:testIamPermissions {"permissions":["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get"]}
+[debug] [2026-05-11T21:37:51.233Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/nexo-app-9f5f3:testIamPermissions 200
+[debug] [2026-05-11T21:37:51.233Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/nexo-app-9f5f3:testIamPermissions {"permissions":["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get"]}
+[info] 
+[info] === Deploying to 'nexo-app-9f5f3'...
+[info] 
+[info] i  deploying firestore 
+[info] i  firestore: ensuring required API firestore.googleapis.com is enabled... 
+[info] i  firestore: ensuring required API firestore.googleapis.com is enabled... 
+[debug] [2026-05-11T21:37:51.236Z] Checked if tokens are valid: true, expires at: 1778539069903
+[debug] [2026-05-11T21:37:51.236Z] Checked if tokens are valid: true, expires at: 1778539069903
+[debug] [2026-05-11T21:37:51.236Z] >>> [apiv2][query] GET https://firestore.googleapis.com/v1/projects/nexo-app-9f5f3/databases/(default) [none]
+[debug] [2026-05-11T21:37:51.558Z] <<< [apiv2][status] GET https://firestore.googleapis.com/v1/projects/nexo-app-9f5f3/databases/(default) 200
+[debug] [2026-05-11T21:37:51.558Z] <<< [apiv2][body] GET https://firestore.googleapis.com/v1/projects/nexo-app-9f5f3/databases/(default) {"name":"projects/nexo-app-9f5f3/databases/(default)","uid":"d32ed963-e386-470d-91db-d82d8900bcf6","createTime":"2026-05-03T20:56:56.488738Z","updateTime":"2026-05-03T20:56:56.488738Z","locationId":"eur3","type":"FIRESTORE_NATIVE","concurrencyMode":"PESSIMISTIC","versionRetentionPeriod":"3600s","earliestVersionTime":"2026-05-11T20:37:51.393031Z","appEngineIntegrationMode":"DISABLED","keyPrefix":"e","pointInTimeRecoveryEnablement":"POINT_IN_TIME_RECOVERY_DISABLED","deleteProtectionState":"DELETE_PROTECTION_DISABLED","databaseEdition":"STANDARD","freeTier":true,"realtimeUpdatesMode":"REALTIME_UPDATES_MODE_ENABLED","etag":"IKzN+PeYspQDMIXfrdCUnpQD"}
+[info] i  firestore: reading indexes from firestore.indexes.json... 
+[info] i  cloud.firestore: checking firestore.rules for compilation errors... 
+[debug] [2026-05-11T21:37:51.568Z] Checked if tokens are valid: true, expires at: 1778539069903
+[debug] [2026-05-11T21:37:51.568Z] Checked if tokens are valid: true, expires at: 1778539069903
+[debug] [2026-05-11T21:37:51.568Z] >>> [apiv2][query] POST https://firebaserules.googleapis.com/v1/projects/nexo-app-9f5f3:test [none]
+[debug] [2026-05-11T21:37:51.568Z] >>> [apiv2][body] POST https://firebaserules.googleapis.com/v1/projects/nexo-app-9f5f3:test [omitted]
+[debug] [2026-05-11T21:37:51.983Z] <<< [apiv2][status] POST https://firebaserules.googleapis.com/v1/projects/nexo-app-9f5f3:test 200
+[debug] [2026-05-11T21:37:51.983Z] <<< [apiv2][body] POST https://firebaserules.googleapis.com/v1/projects/nexo-app-9f5f3:test {}
+[info] +  cloud.firestore: rules file firestore.rules compiled successfully 
+[info] i  firestore: deploying indexes... 
+[debug] [2026-05-11T21:37:51.985Z] Checked if tokens are valid: true, expires at: 1778539069903
+[debug] [2026-05-11T21:37:51.985Z] Checked if tokens are valid: true, expires at: 1778539069903
+[debug] [2026-05-11T21:37:51.985Z] >>> [apiv2][query] GET https://firestore.googleapis.com/v1/projects/nexo-app-9f5f3/databases/(default)/collectionGroups/-/indexes [none]
+[debug] [2026-05-11T21:37:52.124Z] <<< [apiv2][status] GET https://firestore.googleapis.com/v1/projects/nexo-app-9f5f3/databases/(default)/collectionGroups/-/indexes 200
+[debug] [2026-05-11T21:37:52.124Z] <<< [apiv2][body] GET https://firestore.googleapis.com/v1/projects/nexo-app-9f5f3/databases/(default)/collectionGroups/-/indexes {}
+[debug] [2026-05-11T21:37:52.124Z] Checked if tokens are valid: true, expires at: 1778539069903
+[debug] [2026-05-11T21:37:52.124Z] Checked if tokens are valid: true, expires at: 1778539069903
+[debug] [2026-05-11T21:37:52.125Z] >>> [apiv2][query] GET https://firestore.googleapis.com/v1/projects/nexo-app-9f5f3/databases/(default)/collectionGroups/-/fields?filter=indexConfig.usesAncestorConfig=false OR ttlConfig:* [none]
+[debug] [2026-05-11T21:37:52.236Z] <<< [apiv2][status] GET https://firestore.googleapis.com/v1/projects/nexo-app-9f5f3/databases/(default)/collectionGroups/-/fields?filter=indexConfig.usesAncestorConfig=false OR ttlConfig:* 200
+[debug] [2026-05-11T21:37:52.236Z] <<< [apiv2][body] GET https://firestore.googleapis.com/v1/projects/nexo-app-9f5f3/databases/(default)/collectionGroups/-/fields?filter=indexConfig.usesAncestorConfig=false OR ttlConfig:* {"fields":[{"name":"projects/nexo-app-9f5f3/databases/(default)/collectionGroups/__default__/fields/*","indexConfig":{"indexes":[{"queryScope":"COLLECTION","fields":[{"fieldPath":"*","order":"ASCENDING"}],"state":"READY"},{"queryScope":"COLLECTION","fields":[{"fieldPath":"*","order":"DESCENDING"}],"state":"READY"},{"queryScope":"COLLECTION","fields":[{"fieldPath":"*","arrayConfig":"CONTAINS"}],"state":"READY"}]}}]}
+[debug] [2026-05-11T21:37:52.236Z] Checked if tokens are valid: true, expires at: 1778539069903
+[debug] [2026-05-11T21:37:52.236Z] Checked if tokens are valid: true, expires at: 1778539069903
+[debug] [2026-05-11T21:37:52.236Z] >>> [apiv2][query] GET https://firestore.googleapis.com/v1/projects/nexo-app-9f5f3/databases/(default) [none]
+[debug] [2026-05-11T21:37:52.325Z] <<< [apiv2][status] GET https://firestore.googleapis.com/v1/projects/nexo-app-9f5f3/databases/(default) 200
+[debug] [2026-05-11T21:37:52.325Z] <<< [apiv2][body] GET https://firestore.googleapis.com/v1/projects/nexo-app-9f5f3/databases/(default) {"name":"projects/nexo-app-9f5f3/databases/(default)","uid":"d32ed963-e386-470d-91db-d82d8900bcf6","createTime":"2026-05-03T20:56:56.488738Z","updateTime":"2026-05-03T20:56:56.488738Z","locationId":"eur3","type":"FIRESTORE_NATIVE","concurrencyMode":"PESSIMISTIC","versionRetentionPeriod":"3600s","earliestVersionTime":"2026-05-11T20:37:52.154239Z","appEngineIntegrationMode":"DISABLED","keyPrefix":"e","pointInTimeRecoveryEnablement":"POINT_IN_TIME_RECOVERY_DISABLED","deleteProtectionState":"DELETE_PROTECTION_DISABLED","databaseEdition":"STANDARD","freeTier":true,"realtimeUpdatesMode":"REALTIME_UPDATES_MODE_ENABLED","etag":"IMyJp/iYspQDMIXfrdCUnpQD"}
+[debug] [2026-05-11T21:37:52.325Z] Creating new index: {"collectionGroup":"meal_plans","queryScope":"COLLECTION","fields":[{"fieldPath":"ownerUid","order":"ASCENDING"},{"fieldPath":"weekStartDate","order":"ASCENDING"}]}
+[debug] [2026-05-11T21:37:52.325Z] Checked if tokens are valid: true, expires at: 1778539069903
+[debug] [2026-05-11T21:37:52.325Z] Checked if tokens are valid: true, expires at: 1778539069903
+[debug] [2026-05-11T21:37:52.325Z] >>> [apiv2][query] POST https://firestore.googleapis.com/v1/projects/nexo-app-9f5f3/databases/(default)/collectionGroups/meal_plans/indexes [none]
+[debug] [2026-05-11T21:37:52.325Z] >>> [apiv2][body] POST https://firestore.googleapis.com/v1/projects/nexo-app-9f5f3/databases/(default)/collectionGroups/meal_plans/indexes {"fields":[{"fieldPath":"ownerUid","order":"ASCENDING"},{"fieldPath":"weekStartDate","order":"ASCENDING"}],"queryScope":"COLLECTION"}
+[debug] [2026-05-11T21:37:52.650Z] <<< [apiv2][status] POST https://firestore.googleapis.com/v1/projects/nexo-app-9f5f3/databases/(default)/collectionGroups/meal_plans/indexes 200
+[debug] [2026-05-11T21:37:52.650Z] <<< [apiv2][body] POST https://firestore.googleapis.com/v1/projects/nexo-app-9f5f3/databases/(default)/collectionGroups/meal_plans/indexes {"name":"projects/nexo-app-9f5f3/databases/(default)/operations/S0U0aFhqT2dBQ0lDDCoDIDkwMmI2MzI1NWZmMi1lN2VhLTg3MTQtZmUxZi1mYTZhNWIzOCQac2VuaWxlcGlwCQpBEg","metadata":{"@type":"type.googleapis.com/google.firestore.admin.v1.IndexOperationMetadata","startTime":"2026-05-11T21:37:52.360964Z","index":"projects/nexo-app-9f5f3/databases/(default)/collectionGroups/meal_plans/indexes/CICAgOjXh4EK","state":"INITIALIZING"}}
+[info] +  firestore: deployed indexes in firestore.indexes.json successfully for (default) database 
+[info] 
+[info] +  Deploy complete! 
+[info] 
+[info] Project Console: https://console.firebase.google.com/project/nexo-app-9f5f3/overview
+[debug] [2026-05-11T21:37:57.846Z] Error: Timed out.
+    at Timeout._onTimeout (C:\Users\Pedro J\AppData\Roaming\npm\node_modules\firebase-tools\lib\utils.js:309:49)
+    at listOnTimeout (node:internal/timers:581:17)
+    at process.processTimers (node:internal/timers:519:7)
+[error] 
+[error] Error: An unexpected error has occurred.

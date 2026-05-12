@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nexo - Note Editor</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#5d5e60",
+                        "inverse-surface": "#303032",
+                        "primary-fixed-dim": "#e9c400",
+                        "surface-bright": "#fcf8fb",
+                        "outline": "#7f775f",
+                        "on-primary-fixed": "#221b00",
+                        "secondary-fixed-dim": "#c6c6c8",
+                        "background": "#fcf8fb",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#d9d8dd",
+                        "secondary-fixed": "#e2e2e4",
+                        "on-primary-fixed-variant": "#544600",
+                        "primary": "#705d00",
+                        "on-secondary-fixed": "#1a1c1d",
+                        "on-tertiary-fixed-variant": "#46464b",
+                        "secondary-container": "#dfdfe1",
+                        "surface": "#fcf8fb",
+                        "on-background": "#1b1b1d",
+                        "tertiary-fixed": "#e3e2e7",
+                        "surface-dim": "#dcd9dc",
+                        "tertiary-fixed-dim": "#c6c6cb",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#1a1b1f",
+                        "on-secondary-container": "#616365",
+                        "error-container": "#ffdad6",
+                        "on-error-container": "#93000a",
+                        "inverse-on-surface": "#f3f0f2",
+                        "surface-container-low": "#f6f3f5",
+                        "tertiary": "#5d5e63",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#e4e2e4",
+                        "on-secondary-fixed-variant": "#454749",
+                        "surface-container": "#f0edef",
+                        "primary-fixed": "#ffe170",
+                        "error": "#ba1a1a",
+                        "surface-container-lowest": "#ffffff",
+                        "outline-variant": "#d0c6ab",
+                        "surface-container-highest": "#e4e2e4",
+                        "on-tertiary-container": "#5d5e63",
+                        "primary-container": "#ffd600",
+                        "surface-container-high": "#eae7ea",
+                        "on-secondary": "#ffffff",
+                        "on-surface-variant": "#4d4632",
+                        "surface-tint": "#705d00",
+                        "on-surface": "#1b1b1d",
+                        "on-primary-container": "#705d00",
+                        "inverse-primary": "#e9c400"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "xs": "4px",
+                        "md": "16px",
+                        "sm": "8px",
+                        "base": "4px",
+                        "xl": "32px",
+                        "lg": "24px",
+                        "container-margin": "20px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "title-sm": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "title-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Level 2 Shadow for Floating Elements */
+        .shadow-level-2 {
+            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.04);
+        }
+        /* Level 3 Shadow for Modals/Overlays */
+        .shadow-level-3 {
+            box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.08);
+        }
+        /* Custom scrollbar for editor area to maintain minimalism */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #e4e2e4; 
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #dcd9dc;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface-container-lowest text-on-surface antialiased min-h-screen flex flex-col font-body-md">
+<!-- Header (Task-Specific TopAppBar) -->
+<header class="w-full flex justify-between items-center px-container-margin py-md max-w-7xl mx-auto bg-surface-container-lowest sticky top-0 z-10">
+<div class="flex items-center gap-sm">
+<button aria-label="Go back" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low text-on-surface transition-colors">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<span class="text-on-surface-variant font-body-sm text-body-sm hidden sm:inline-block">Saved to cloud just now</span>
+</div>
+<div class="flex items-center gap-md">
+<button aria-label="More options" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low text-on-surface-variant transition-colors sm:hidden">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+<button class="px-4 py-2 rounded-full bg-primary-container text-on-primary-container font-label-caps text-label-caps transition-transform hover:scale-95 active:scale-90 flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="check" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check</span>
+                Save Note
+            </button>
+</div>
+</header>
+<!-- Main Editor Canvas -->
+<main class="flex-1 w-full max-w-3xl mx-auto px-container-margin py-lg flex flex-col relative pb-48">
+<!-- Title Input -->
+<input class="w-full bg-transparent border-none outline-none font-display-lg text-display-lg text-on-surface placeholder:text-outline-variant mb-6 p-0 focus:ring-0" placeholder="Note Title" type="text" value="Q3 Product Strategy Alignment"/>
+<!-- Tags/Chips (Optional contextual metadata) -->
+<div class="flex gap-2 mb-8 flex-wrap">
+<span class="px-3 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-body-sm text-body-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="work">work</span> Strategy
+            </span>
+<span class="px-3 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-body-sm text-body-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="group">group</span> Team
+            </span>
+<button class="px-3 py-1 rounded-full border border-dashed border-outline-variant text-outline hover:bg-surface-container-low transition-colors font-body-sm text-body-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="add">add</span> Add tag
+            </button>
+</div>
+<!-- Body Text Area (simulated with contenteditable div for rich text feel) -->
+<div class="w-full flex-1 bg-transparent border-none outline-none font-body-md text-body-md text-on-surface-variant placeholder:text-outline-variant focus:ring-0 min-h-[300px] focus:outline-none focus:ring-1 focus:ring-primary/20 rounded-lg p-2 -m-2 cursor-text" contenteditable="true" placeholder="Start typing..." spellcheck="false">
+<p class="mb-4">The primary objective for Q3 is to streamline the onboarding experience for enterprise clients. Recent feedback indicates that the initial setup phase is taking 20% longer than anticipated.</p>
+<h3 class="font-title-sm text-title-sm text-on-surface mt-6 mb-2">Key Areas of Focus:</h3>
+<ul class="list-disc pl-5 mb-4 space-y-2">
+<li>Automate the data ingestion pipeline to reduce manual entry.</li>
+<li>Redesign the welcome dashboard to surface quick-start guides more prominently.</li>
+<li>Introduce an AI-assisted setup wizard for configuration.</li>
+</ul>
+<p class="mb-4">We need to review the technical constraints before committing to the AI wizard timeline. Let's sync with the engineering leads on Tuesday to finalize the feasibility report.</p>
+</div>
+</main>
+<!-- Floating Rich-Text Toolbar -->
+<div class="fixed bottom-20 left-1/2 -translate-x-1/2 flex items-center gap-1 px-2 py-2 bg-surface-container-lowest shadow-level-2 rounded-full border border-surface-variant z-20 w-max">
+<!-- Text Formatting -->
+<div class="flex items-center gap-1 pr-2 border-r border-surface-variant">
+<button aria-label="Bold" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low text-on-surface transition-colors">
+<span class="material-symbols-outlined" data-icon="format_bold">format_bold</span>
+</button>
+<button aria-label="Italic" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined" data-icon="format_italic">format_italic</span>
+</button>
+<button aria-label="Underline" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low text-on-surface-variant transition-colors hidden sm:flex">
+<span class="material-symbols-outlined" data-icon="format_underlined">format_underlined</span>
+</button>
+</div>
+<!-- Lists & Paragraph -->
+<div class="flex items-center gap-1 px-2 border-r border-surface-variant">
+<button aria-label="Bullet List" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined" data-icon="format_list_bulleted">format_list_bulleted</span>
+</button>
+<button aria-label="Numbered List" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined" data-icon="format_list_numbered">format_list_numbered</span>
+</button>
+</div>
+<!-- AI Assistant Action (High-energy accent) -->
+<div class="pl-2">
+<!-- This button represents the trigger for the AI Modal -->
+<button aria-label="AI Assistant" class="w-10 h-10 flex items-center justify-center rounded-full bg-primary-container text-on-primary-container hover:scale-95 transition-transform shadow-sm">
+<span class="material-symbols-outlined" data-icon="smart_toy" data-weight="fill" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+</button>
+</div>
+</div>
+<!-- AI Assistant Modal / Overlay (Displayed for design purposes) -->
+<!-- In a real app, this would be toggled via JS. Showing it fixed here to demonstrate the UI requirement. -->
+<div class="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-on-background/10 backdrop-blur-[2px] p-4 pointer-events-none">
+<!-- Modal Content (Pointer events enabled so it looks interactive) -->
+<div class="w-full max-w-[320px] bg-surface-container-lowest rounded-2xl shadow-level-3 p-md flex flex-col gap-sm sm:-mt-20 pointer-events-auto border border-surface-container-low">
+<div class="flex items-center justify-between mb-2 pb-2 border-b border-surface-container-low">
+<div class="flex items-center gap-2 text-on-surface">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined text-[18px]" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<span class="font-title-sm text-title-sm">Nexo Assistant</span>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined text-[20px]" data-icon="close">close</span>
+</button>
+</div>
+<div class="flex flex-col gap-1">
+<button class="w-full text-left px-3 py-3 rounded-lg hover:bg-surface-container-low text-on-surface font-body-sm text-body-sm flex items-center gap-3 transition-colors group">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors" data-icon="summarize">summarize</span>
+                    Summarize Note
+                </button>
+<button class="w-full text-left px-3 py-3 rounded-lg hover:bg-surface-container-low text-on-surface font-body-sm text-body-sm flex items-center gap-3 transition-colors group">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors" data-icon="spellcheck">spellcheck</span>
+                    Fix Grammar &amp; Spelling
+                </button>
+<button class="w-full text-left px-3 py-3 rounded-lg hover:bg-surface-container-low text-on-surface font-body-sm text-body-sm flex items-center gap-3 transition-colors group">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors" data-icon="record_voice_over">record_voice_over</span>
+                    Change Tone...
+                </button>
+<button class="w-full text-left px-3 py-3 rounded-lg hover:bg-surface-container-low text-on-surface font-body-sm text-body-sm flex items-center gap-3 transition-colors group">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors" data-icon="list_alt">list_alt</span>
+                    Extract Action Items
+                </button>
+</div>
+<!-- Input area for custom AI prompt -->
+<div class="mt-2 relative">
+<input class="w-full bg-surface-container-low border-none rounded-lg py-2 pl-3 pr-10 font-body-sm text-body-sm text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-primary-container outline-none transition-shadow" placeholder="Or type a custom prompt..." type="text"/>
+<button class="absolute right-2 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="arrow_upward">arrow_upward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 bg-surface-container-lowest border-t border-surface-variant px-container-margin py-2 flex justify-between items-center z-30">
+<button class="flex flex-col items-center gap-1 flex-1 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] font-label-caps">Home</span>
+</button>
+<button class="flex flex-col items-center gap-1 flex-1 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">description</span>
+<span class="text-[10px] font-label-caps">Content</span>
+</button>
+<button class="flex flex-col items-center gap-1 flex-1 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">smart_toy</span>
+<span class="text-[10px] font-label-caps">Assistant</span>
+</button>
+<button class="flex flex-col items-center gap-1 flex-1 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+<span class="text-[10px] font-label-caps">Health</span>
+</button>
+<button class="flex flex-col items-center gap-1 flex-1 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-label-caps">People</span>
+</button>
+</nav></body></html>

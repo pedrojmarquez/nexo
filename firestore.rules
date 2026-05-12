@@ -1,0 +1,49 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Helpers ─────────────────────────────────────────────────────────
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isAuthenticated() && request.auth.uid == uid;
+    }
+
+    function isSharedWith() {
+      return isAuthenticated() &&
+             request.auth.uid in resource.data.sharedWith;
+    }
+
+    // ── /users/{uid} ─────────────────────────────────────────────────────
+    // Cada usuario solo puede leer/escribir su propio perfil
+    match /users/{uid} {
+      allow read, write: if isOwner(uid);
+    }
+
+    // ── /notes/{noteId} ──────────────────────────────────────────────────
+    // El propietario y los usuarios compartidos tienen acceso completo
+    match /notes/{noteId} {
+      allow read, update, delete: if isOwner(resource.data.ownerUid) || isSharedWith();
+      allow create: if isAuthenticated() &&
+                       request.resource.data.ownerUid == request.auth.uid;
+    }
+
+    // ── /meal_plans/{planId} ──────────────────────────────────────────────
+    match /meal_plans/{planId} {
+      allow read, update, delete: if isOwner(resource.data.ownerUid) || isSharedWith();
+      allow create: if isAuthenticated() &&
+                       request.resource.data.ownerUid == request.auth.uid;
+    }
+
+    // ── /quick_notes/{noteId} ─────────────────────────────────────────────
+    match /quick_notes/{noteId} {
+      allow read, write: if isOwner(resource.data.ownerUid);
+      allow create: if isAuthenticated() &&
+                       request.resource.data.ownerUid == request.auth.uid;
+    }
+
+  }
+}

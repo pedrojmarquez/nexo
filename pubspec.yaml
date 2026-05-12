@@ -1,0 +1,101 @@
+name: nexo
+description: Nexo - Tu asistente personal inteligente. Notas, agenda, comidas y más, potenciado por IA.
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # ──────────────────────────────────────────
+  # UI & Design
+  # ──────────────────────────────────────────
+  google_fonts: ^6.2.1
+  flutter_animate: ^4.5.0
+  shimmer: ^3.0.0                        # Skeleton loaders
+  cached_network_image: ^3.3.1
+
+  # ──────────────────────────────────────────
+  # State Management
+  # ──────────────────────────────────────────
+  flutter_riverpod: ^2.5.1
+  riverpod_annotation: ^2.3.5
+
+  # ──────────────────────────────────────────
+  # Navigation
+  # ──────────────────────────────────────────
+  go_router: ^14.2.0
+
+  # ──────────────────────────────────────────
+  # Firebase
+  # ──────────────────────────────────────────
+  firebase_core: ^3.3.0
+  firebase_auth: ^5.1.3
+  cloud_firestore: ^5.2.1
+  google_sign_in: ^6.2.1
+  extension_google_sign_in_as_googleapis_auth: ^2.0.13
+
+  # ──────────────────────────────────────────
+  # Data & Serialization
+  # ──────────────────────────────────────────
+  freezed_annotation: ^2.4.4
+  json_annotation: ^4.9.0
+
+  # ──────────────────────────────────────────
+  # AI
+  # ──────────────────────────────────────────
+  google_generative_ai: ^0.4.6
+
+  # ──────────────────────────────────────────
+  # Calendar & Notifications
+  # ──────────────────────────────────────────
+  flutter_local_notifications: ^17.2.3
+  googleapis: ^13.2.0
+  googleapis_auth: ^1.6.0
+
+  # ──────────────────────────────────────────
+  # Home Widgets
+  # ──────────────────────────────────────────
+  home_widget: ^0.9.1
+
+  # ──────────────────────────────────────────
+  # Utilities
+  # ──────────────────────────────────────────
+  intl: ^0.20.2
+  uuid: ^4.5.3
+  equatable: ^2.0.5
+  logger: ^2.4.0
+  shared_preferences: ^2.3.0
+  flutter_dotenv: ^5.1.0
+  flutter_staggered_grid_view: ^0.7.0
+  flutter_quill: ^11.5.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+  # Code generation
+  build_runner: ^2.4.13
+  freezed: ^2.5.7
+  json_serializable: ^6.8.0
+  riverpod_generator: ^2.4.3
+  custom_lint: ^0.6.7
+  riverpod_lint: ^2.3.13
+  flutter_launcher_icons: ^0.14.4
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/icons/
+    - .env
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icons/app_icon.png"
+  min_sdk_android: 21

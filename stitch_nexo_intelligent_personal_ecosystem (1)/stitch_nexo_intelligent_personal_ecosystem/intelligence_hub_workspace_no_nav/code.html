@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nexo - Intelligence Hub</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+        /* Hide scrollbar for horizontal scrolling */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-container": "#705d00",
+                        "on-surface-variant": "#4d4632",
+                        "inverse-on-surface": "#f3f0f2",
+                        "tertiary-fixed": "#e3e2e7",
+                        "primary-fixed-dim": "#e9c400",
+                        "surface-container-low": "#f6f3f5",
+                        "primary": "#705d00",
+                        "surface-container-high": "#eae7ea",
+                        "surface-bright": "#fcf8fb",
+                        "secondary": "#5d5e60",
+                        "outline-variant": "#d0c6ab",
+                        "background": "#fcf8fb",
+                        "surface-tint": "#705d00",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed-variant": "#544600",
+                        "inverse-primary": "#e9c400",
+                        "surface-container-highest": "#e4e2e4",
+                        "on-error": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-surface": "#303032",
+                        "secondary-fixed": "#e2e2e4",
+                        "surface-dim": "#dcd9dc",
+                        "tertiary-fixed-dim": "#c6c6cb",
+                        "on-background": "#1b1b1d",
+                        "on-secondary-container": "#616365",
+                        "secondary-fixed-dim": "#c6c6c8",
+                        "on-secondary-fixed": "#1a1c1d",
+                        "surface-variant": "#e4e2e4",
+                        "on-error-container": "#93000a",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#dfdfe1",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#ffd600",
+                        "on-tertiary-fixed": "#1a1b1f",
+                        "surface": "#fcf8fb",
+                        "surface-container": "#f0edef",
+                        "on-secondary-fixed-variant": "#454749",
+                        "tertiary-container": "#d9d8dd",
+                        "on-tertiary-fixed-variant": "#46464b",
+                        "on-primary-fixed": "#221b00",
+                        "primary-fixed": "#ffe170",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-container": "#5d5e63",
+                        "tertiary": "#5d5e63",
+                        "outline": "#7f775f",
+                        "on-surface": "#1b1b1d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "sm": "8px",
+                        "gutter": "16px",
+                        "xs": "4px",
+                        "md": "16px",
+                        "base": "4px",
+                        "container-margin": "20px",
+                        "xl": "32px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "title-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "title-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col relative pb-20">
+<!-- TopAppBar -->
+<header class="bg-surface flex justify-between items-center w-full px-container-margin py-md max-w-7xl mx-auto top-0 z-40 sticky">
+<!-- Leading Avatar -->
+<div class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden cursor-pointer shrink-0">
+<img alt="User Avatar" class="w-full h-full object-cover" data-alt="A bright, minimalist headshot portrait of a professional woman with a clean, light background, aligned with a modern UI aesthetic featuring soft lighting and neutral tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8PNf52c_W8kM64wd7pnGNHE2PNeu8yAApiAs3BN1q0Pf-StmTAl-7YbPp_GhSNzQSQdTSg705LSi995o4VA9nFqoTBFoTifi857RKkffHSxMhFexSzJUP_FPZobd00-ALDM7f5kFB7VS_4nhb6qL65IkwywP8tgAhLsdfIHpHz8zXW0aKLWGuGpp7-GLQ3fkSFh_194AWQISPRCuyPh5iQXlV7MIfWY-Z5sDsjBpmn5IBqJ6tLRQaCVL94hznYLZYq60o3tFvt6Q"/>
+</div>
+<!-- Headline -->
+<h1 class="text-headline-md font-headline-md tracking-tight text-on-surface flex-grow text-center">Nexo</h1>
+<!-- Trailing Icon -->
+<button class="w-10 h-10 flex items-center justify-center text-primary rounded-full hover:bg-surface-container-low transition-colors shrink-0">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+</header>
+<!-- Main Workspace Canvas -->
+<main class="flex-grow w-full max-w-7xl mx-auto px-container-margin md:pb-xl flex flex-col gap-xl pb-xl">
+<!-- Command Input -->
+<section class="w-full pt-sm">
+<div class="relative w-full max-w-3xl mx-auto">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-on-surface-variant">bolt</span>
+</div>
+<input class="w-full bg-surface-container-low text-on-surface placeholder:text-on-surface-variant font-body-md text-body-md rounded-xl py-4 pl-12 pr-4 border-none focus:ring-2 focus:ring-primary-container focus:bg-surface transition-all shadow-sm" placeholder="Command Nexo... search notes, people, or ask assistant" type="text"/>
+</div>
+</section>
+<!-- Quick Post-its (Horizontal Scroll) -->
+<section class="w-full flex flex-col gap-md">
+<div class="flex items-center justify-between">
+<h2 class="font-title-sm text-title-sm text-on-surface">Quick Post-its</h2>
+<button class="text-primary font-label-caps text-label-caps hover:bg-surface-container-low px-2 py-1 rounded">VIEW ALL</button>
+</div>
+<div class="flex overflow-x-auto gap-gutter snap-x hide-scrollbar pb-2 -mx-container-margin px-container-margin md:mx-0 md:px-0">
+<!-- Primary Yellow Sticky -->
+<div class="min-w-[220px] w-[260px] shrink-0 snap-center bg-primary-container text-on-primary-container rounded-xl p-md flex flex-col gap-sm shadow-[0px_4px_20px_rgba(0,0,0,0.04)] cursor-pointer hover:-translate-y-1 transition-transform relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary/30 to-transparent"></div>
+<div class="flex justify-between items-start">
+<span class="font-title-sm text-title-sm">Design Sync Prep</span>
+<span class="material-symbols-outlined text-on-primary-container/70 text-[18px]" data-icon="push_pin" data-weight="fill" style="font-variation-settings: 'FILL' 1;">push_pin</span>
+</div>
+<p class="font-body-sm text-body-sm opacity-90 line-clamp-3">Review wireframes for the new dashboard. Need to confirm the typography hierarchy with the brand team before 3 PM.</p>
+<div class="mt-auto pt-sm flex justify-between items-center text-[12px] opacity-70">
+<span>Today</span>
+</div>
+</div>
+<!-- Secondary Sticky 1 -->
+<div class="min-w-[220px] w-[260px] shrink-0 snap-center bg-surface-container-low text-on-surface rounded-xl p-md flex flex-col gap-sm hover:-translate-y-1 transition-transform border border-surface-container-highest cursor-pointer">
+<div class="flex justify-between items-start">
+<span class="font-title-sm text-title-sm text-on-surface">Grocery Run</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-3">- Oat milk<br/>- Espresso beans<br/>- Almonds<br/>- Sparkling water</p>
+<div class="mt-auto pt-sm flex justify-between items-center text-[12px] text-on-surface-variant opacity-70">
+<span>Yesterday</span>
+</div>
+</div>
+<!-- Secondary Sticky 2 -->
+<div class="min-w-[220px] w-[260px] shrink-0 snap-center bg-surface-container-low text-on-surface rounded-xl p-md flex flex-col gap-sm hover:-translate-y-1 transition-transform border border-surface-container-highest cursor-pointer">
+<div class="flex justify-between items-start">
+<span class="font-title-sm text-title-sm text-on-surface">Q3 Ideas</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-3">Implement localized AI search. Explore vector databases for faster retrieval. Ping engineering lead.</p>
+<div class="mt-auto pt-sm flex justify-between items-center text-[12px] text-on-surface-variant opacity-70">
+<span>Oct 12</span>
+</div>
+</div>
+<!-- Add New Sticky -->
+<div class="min-w-[120px] shrink-0 snap-center bg-surface-container-highest/50 text-on-surface-variant border-2 border-dashed border-outline-variant rounded-xl p-md flex flex-col items-center justify-center gap-sm hover:bg-surface-container-low transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-[32px]" data-icon="add">add</span>
+<span class="font-label-caps text-label-caps">NEW</span>
+</div>
+</div>
+</section>
+<!-- Professional Notes (Masonry/Bento Grid) -->
+<section class="w-full flex flex-col gap-md">
+<div class="flex items-center justify-between">
+<h2 class="font-title-sm text-title-sm text-on-surface">Professional Notes</h2>
+<div class="flex items-center gap-xs text-on-surface-variant">
+<button class="p-1 hover:bg-surface-container-low rounded"><span class="material-symbols-outlined text-[20px]" data-icon="grid_view">grid_view</span></button>
+<button class="p-1 hover:bg-surface-container-low rounded opacity-50"><span class="material-symbols-outlined text-[20px]" data-icon="view_list">view_list</span></button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-md items-start">
+<!-- Note Card 1 (Pinned, Elaborate) -->
+<article class="bg-surface rounded-xl p-md flex flex-col gap-md shadow-[0px_4px_20px_rgba(0,0,0,0.04)] border border-surface-container-low hover:shadow-[0px_8px_30px_rgba(0,0,0,0.08)] transition-shadow cursor-pointer relative group">
+<div class="absolute top-md right-md text-primary opacity-100 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[20px]" data-icon="push_pin" data-weight="fill" style="font-variation-settings: 'FILL' 1;">push_pin</span>
+</div>
+<div class="w-12 h-12 rounded bg-tertiary-container flex items-center justify-center text-on-tertiary-container mb-xs">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+</div>
+<div>
+<h3 class="font-title-sm text-title-sm text-on-surface mb-xs pr-8">Q4 Strategy Architecture Blueprint</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-4">The core objective for Q4 focuses heavily on infrastructure scalability and minimizing technical debt accrued during the rapid prototyping phase of Q2. We will prioritize migrating legacy microservices to the new Kubernetes cluster.</p>
+</div>
+<div class="flex flex-wrap gap-2 mt-auto">
+<span class="bg-surface-container-low text-on-surface-variant font-label-caps text-label-caps px-2 py-1 rounded-full text-[10px]">ENGINEERING</span>
+<span class="bg-surface-container-low text-on-surface-variant font-label-caps text-label-caps px-2 py-1 rounded-full text-[10px]">Q4</span>
+</div>
+<div class="border-t border-surface-container-highest pt-sm flex justify-between items-center mt-xs">
+<span class="font-body-sm text-body-sm text-[12px] text-on-surface-variant">Updated 2 hrs ago</span>
+<div class="flex -space-x-2">
+<img alt="Collaborator" class="w-6 h-6 rounded-full border border-surface z-10" data-alt="A tiny, high-quality circular avatar portrait of a modern professional male against a bright background, styled for a minimalist user interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAx6vQti9TI3aqj2asu0RArEi-K-oa7our57VIewLDKIAFmNOwIJJCBU1f2Fea4kDJc24ijPjPa9kFtIdz5KlTpD0AoJaC3L7wTMkBS61Q_DDwXaFfyWEv7omsU4B1EXIBpOqzcmOVWrRRTKidrS1O3x72-lCsgsKESzaFZkfeyeYCxuSduM0OOtXwaqSYk86cZf-lzNbTGWDkJBmxY9C8RADPB6LAsEOR7-MZskLZ6bTLzYRoOtc1FCwvDYXrUwC4Q7UBrUpZu3n8"/>
+<div class="w-6 h-6 rounded-full border border-surface bg-surface-container-highest flex items-center justify-center text-[10px] font-bold text-on-surface-variant z-0">+2</div>
+</div>
+</div>
+</article>
+<!-- Note Card 2 (Image embedded) -->
+<article class="bg-surface rounded-xl flex flex-col shadow-[0px_4px_20px_rgba(0,0,0,0.04)] border border-surface-container-low hover:shadow-[0px_8px_30px_rgba(0,0,0,0.08)] transition-shadow cursor-pointer overflow-hidden">
+<div class="h-32 w-full bg-surface-container-low relative">
+<img alt="Moodboard" class="w-full h-full object-cover" data-alt="A minimalist digital abstract art piece showing soft flowing lines and muted warm tones, serving as a subtle, modern header image for a user interface card." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDx54WVKTEqogtlo9gi0UD6O8xGwGb_AcytQsVrUVd7Efl2k2SFtbwS2V7oVTeL6_DYpmZ5Kon1FF-1VFekn9l4v7DSE998t7QVHV_k_3uYjJS270BC6L_4vgY3FgQ7NLVeh0aANbcyEdKMkjUiMKSoeKvXUiNrD6WREb-r_HAWLAqst617KynqmN7L4MoNBh_UwurpWHG_0ObIpNFZaBYzqjeE4hJ2aHsVa0n2H2Zcqc5Vje_3RIUftddO8b50xEi2MlamM3W4Q5w"/>
+</div>
+<div class="p-md flex flex-col gap-md">
+<div>
+<h3 class="font-title-sm text-title-sm text-on-surface mb-xs">Brand Identity Moodboard</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">Visual exploration for the 'White-Plus' design language. Emphasizing clean typography and strategic use of negative space.</p>
+</div>
+<div class="flex flex-wrap gap-2 mt-auto">
+<span class="bg-surface-container-low text-on-surface-variant font-label-caps text-label-caps px-2 py-1 rounded-full text-[10px]">DESIGN</span>
+</div>
+<div class="border-t border-surface-container-highest pt-sm mt-xs">
+<span class="font-body-sm text-body-sm text-[12px] text-on-surface-variant">Oct 24, 2023</span>
+</div>
+</div>
+</article>
+<!-- Note Card 3 (Checklist style) -->
+<article class="bg-surface rounded-xl p-md flex flex-col gap-md shadow-[0px_4px_20px_rgba(0,0,0,0.04)] border border-surface-container-low hover:shadow-[0px_8px_30px_rgba(0,0,0,0.08)] transition-shadow cursor-pointer">
+<div>
+<h3 class="font-title-sm text-title-sm text-on-surface mb-md">Weekly Team Sync Notes</h3>
+<ul class="flex flex-col gap-2">
+<li class="flex items-start gap-sm">
+<div class="w-4 h-4 rounded mt-1 bg-primary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[12px] text-on-primary-container" data-icon="check">check</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface line-through opacity-70">Review sprint velocity metrics</span>
+</li>
+<li class="flex items-start gap-sm">
+<div class="w-4 h-4 rounded mt-1 border border-outline-variant bg-surface flex items-center justify-center shrink-0"></div>
+<span class="font-body-sm text-body-sm text-on-surface">Finalize budget allocation for marketing tools</span>
+</li>
+<li class="flex items-start gap-sm">
+<div class="w-4 h-4 rounded mt-1 border border-outline-variant bg-surface flex items-center justify-center shrink-0"></div>
+<span class="font-body-sm text-body-sm text-on-surface">Schedule 1:1s with new hires</span>
+</li>
+</ul>
+</div>
+<div class="flex flex-wrap gap-2 mt-auto pt-sm">
+<span class="bg-surface-container-low text-on-surface-variant font-label-caps text-label-caps px-2 py-1 rounded-full text-[10px]">MANAGEMENT</span>
+</div>
+<div class="border-t border-surface-container-highest pt-sm mt-xs">
+<span class="font-body-sm text-body-sm text-[12px] text-on-surface-variant">Oct 23, 2023</span>
+</div>
+</article>
+</div>
+</section>
+</main>
+<!-- Floating Action Button (FAB) -->
+<button class="fixed bottom-[88px] right-container-margin md:bottom-xl md:right-xl bg-primary-container text-on-primary-container rounded-full w-14 h-14 flex items-center justify-center shadow-[0px_8px_30px_rgba(0,0,0,0.12)] z-40 hover:scale-105 hover:bg-primary-fixed transition-all">
+<span class="material-symbols-outlined text-[28px]" data-icon="add">add</span>
+</button>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 right-0 bg-surface border-t border-surface-container-highest px-container-margin py-2 flex justify-between items-center z-50 md:hidden">
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined" data-icon="home" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="text-[10px] font-label-caps">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="text-[10px] font-label-caps">Content</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
+<span class="text-[10px] font-label-caps">Assistant</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="health_and_safety">health_and_safety</span>
+<span class="text-[10px] font-label-caps">Health</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="text-[10px] font-label-caps">People</span>
+</a>
+</nav></body></html>
