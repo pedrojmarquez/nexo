@@ -6,6 +6,7 @@ import 'package:nexo/features/meals/domain/meal_plan_model.dart';
 import 'package:nexo/features/meals/presentation/providers/meals_provider.dart';
 import 'package:nexo/features/meals/presentation/widgets/recipe_view.dart';
 import 'package:nexo/features/meals/presentation/widgets/ingredients_view.dart';
+import 'package:nexo/features/meals/presentation/widgets/recipe_modal.dart';
 
 /// ─────────────────────────────────────────────────────────────────────────────
 /// DayDetailCard — Card completa de un día con sus slots de comida
@@ -343,6 +344,33 @@ class _DayDetailCardState extends ConsumerState<DayDetailCard> {
       setState(() => _expandedIngredients.add(meal.id));
     }
   }
+
+  Future<void> _removeMeal(String mealId) async {
+    if (widget.planId == null) return;
+    
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Eliminar Comida'),
+        content: const Text('¿Estás seguro de que quieres eliminar esta comida del plan?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancelar'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: TextButton.styleFrom(foregroundColor: NexoColors.error),
+            child: const Text('Eliminar'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      await ref.read(mealsControllerProvider.notifier).removeMealFromPlan(widget.planId!, mealId);
+    }
+  }
 }
 
 class _ActionButton extends StatelessWidget {
@@ -350,13 +378,15 @@ class _ActionButton extends StatelessWidget {
   final String label;
   final Color color;
   final bool isLoading;
+  final bool isIconOnly;
   final VoidCallback onTap;
 
   const _ActionButton({
     required this.icon,
-    required this.label,
+    this.label = '',
     required this.color,
-    required this.isLoading,
+    this.isLoading = false,
+    this.isIconOnly = false,
     required this.onTap,
   });
 
@@ -381,15 +411,19 @@ class _ActionButton extends StatelessWidget {
                         CircularProgressIndicator(color: color, strokeWidth: 2))
               else
                 Icon(icon, size: 15, color: color),
-              const SizedBox(width: 6),
-              Flexible(
-                child: Text(
-                  label,
-                  style: TextStyle(
-                      fontSize: 11, fontWeight: FontWeight.w700, color: color),
-                  overflow: TextOverflow.ellipsis,
+              if (!isIconOnly) ...[
+                const SizedBox(width: 6),
+                Flexible(
+                  child: Text(
+                    label,
+                    style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        color: color),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-              ),
+              ],
             ],
           ),
         ),

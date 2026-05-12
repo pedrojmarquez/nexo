@@ -9,6 +9,7 @@ import 'package:nexo/features/notes/presentation/providers/notes_provider.dart';
 import 'package:nexo/features/meals/presentation/providers/meals_provider.dart';
 import 'package:nexo/core/services/home_widget_service.dart';
 import 'package:nexo/core/theme/theme_provider.dart';
+import 'package:home_widget/home_widget.dart';
 
 /// ─────────────────────────────────────────────────────────────────────────────
 /// NexoApp — Widget raíz. Usa GoRouter generado por Riverpod.
