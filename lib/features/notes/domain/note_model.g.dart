@@ -35,6 +35,8 @@ _$NexoNoteImpl _$$NexoNoteImplFromJson(Map<String, dynamic> json) =>
       isPrimaryShoppingList: json['isPrimaryShoppingList'] as bool? ?? false,
       aiSummary: json['aiSummary'] as String?,
       backgroundPattern: json['backgroundPattern'] as String?,
+      scheduledDate:
+          const ServerTimestampConverter().fromJson(json['scheduledDate']),
       createdAt: const ServerTimestampConverter().fromJson(json['createdAt']),
       updatedAt: const ServerTimestampConverter().fromJson(json['updatedAt']),
     );
@@ -58,6 +60,8 @@ Map<String, dynamic> _$$NexoNoteImplToJson(_$NexoNoteImpl instance) =>
       'isPrimaryShoppingList': instance.isPrimaryShoppingList,
       'aiSummary': instance.aiSummary,
       'backgroundPattern': instance.backgroundPattern,
+      'scheduledDate':
+          const ServerTimestampConverter().toJson(instance.scheduledDate),
       'createdAt': const ServerTimestampConverter().toJson(instance.createdAt),
       'updatedAt': const ServerTimestampConverter().toJson(instance.updatedAt),
     };

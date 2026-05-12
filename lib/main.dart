@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:nexo/firebase_options.dart';
 import 'package:nexo/app.dart';
+import 'package:nexo/core/services/notification_service.dart';
 
 /// ─────────────────────────────────────────────────────────────────────────────
 /// Punto de entrada de Nexo
@@ -15,6 +16,8 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  await NotificationService().init();
 
   await dotenv.load(fileName: ".env");
 

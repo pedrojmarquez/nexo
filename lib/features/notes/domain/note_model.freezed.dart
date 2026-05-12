@@ -71,6 +71,10 @@ mixin _$NexoNote {
   /// Patrón de fondo del editor (dots, grid, lines, waves, confetti, paper, stars, null=liso)
   String? get backgroundPattern => throw _privateConstructorUsedError;
 
+  /// Fecha programada (para notificaciones y tablón diario)
+  @ServerTimestampConverter()
+  DateTime? get scheduledDate => throw _privateConstructorUsedError;
+
   /// Timestamp de creación
   @ServerTimestampConverter()
   DateTime? get createdAt => throw _privateConstructorUsedError;
@@ -112,6 +116,7 @@ abstract class $NexoNoteCopyWith<$Res> {
       bool isPrimaryShoppingList,
       String? aiSummary,
       String? backgroundPattern,
+      @ServerTimestampConverter() DateTime? scheduledDate,
       @ServerTimestampConverter() DateTime? createdAt,
       @ServerTimestampConverter() DateTime? updatedAt});
 }
@@ -148,6 +153,7 @@ class _$NexoNoteCopyWithImpl<$Res, $Val extends NexoNote>
     Object? isPrimaryShoppingList = null,
     Object? aiSummary = freezed,
     Object? backgroundPattern = freezed,
+    Object? scheduledDate = freezed,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
@@ -220,6 +226,10 @@ class _$NexoNoteCopyWithImpl<$Res, $Val extends NexoNote>
           ? _value.backgroundPattern
           : backgroundPattern // ignore: cast_nullable_to_non_nullable
               as String?,
+      scheduledDate: freezed == scheduledDate
+          ? _value.scheduledDate
+          : scheduledDate // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -258,6 +268,7 @@ abstract class _$$NexoNoteImplCopyWith<$Res>
       bool isPrimaryShoppingList,
       String? aiSummary,
       String? backgroundPattern,
+      @ServerTimestampConverter() DateTime? scheduledDate,
       @ServerTimestampConverter() DateTime? createdAt,
       @ServerTimestampConverter() DateTime? updatedAt});
 }
@@ -292,6 +303,7 @@ class __$$NexoNoteImplCopyWithImpl<$Res>
     Object? isPrimaryShoppingList = null,
     Object? aiSummary = freezed,
     Object? backgroundPattern = freezed,
+    Object? scheduledDate = freezed,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
@@ -364,6 +376,10 @@ class __$$NexoNoteImplCopyWithImpl<$Res>
           ? _value.backgroundPattern
           : backgroundPattern // ignore: cast_nullable_to_non_nullable
               as String?,
+      scheduledDate: freezed == scheduledDate
+          ? _value.scheduledDate
+          : scheduledDate // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -397,6 +413,7 @@ class _$NexoNoteImpl implements _NexoNote {
       this.isPrimaryShoppingList = false,
       this.aiSummary,
       this.backgroundPattern,
+      @ServerTimestampConverter() this.scheduledDate,
       @ServerTimestampConverter() this.createdAt,
       @ServerTimestampConverter() this.updatedAt})
       : _items = items,
@@ -503,6 +520,11 @@ class _$NexoNoteImpl implements _NexoNote {
   @override
   final String? backgroundPattern;
 
+  /// Fecha programada (para notificaciones y tablón diario)
+  @override
+  @ServerTimestampConverter()
+  final DateTime? scheduledDate;
+
   /// Timestamp de creación
   @override
   @ServerTimestampConverter()
@@ -515,7 +537,7 @@ class _$NexoNoteImpl implements _NexoNote {
 
   @override
   String toString() {
-    return 'NexoNote(id: $id, ownerUid: $ownerUid, title: $title, type: $type, content: $content, items: $items, tags: $tags, accentColor: $accentColor, sharedWith: $sharedWith, status: $status, isAiEnhanced: $isAiEnhanced, isPinned: $isPinned, noteSubType: $noteSubType, richContent: $richContent, isPrimaryShoppingList: $isPrimaryShoppingList, aiSummary: $aiSummary, backgroundPattern: $backgroundPattern, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'NexoNote(id: $id, ownerUid: $ownerUid, title: $title, type: $type, content: $content, items: $items, tags: $tags, accentColor: $accentColor, sharedWith: $sharedWith, status: $status, isAiEnhanced: $isAiEnhanced, isPinned: $isPinned, noteSubType: $noteSubType, richContent: $richContent, isPrimaryShoppingList: $isPrimaryShoppingList, aiSummary: $aiSummary, backgroundPattern: $backgroundPattern, scheduledDate: $scheduledDate, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -550,6 +572,8 @@ class _$NexoNoteImpl implements _NexoNote {
                 other.aiSummary == aiSummary) &&
             (identical(other.backgroundPattern, backgroundPattern) ||
                 other.backgroundPattern == backgroundPattern) &&
+            (identical(other.scheduledDate, scheduledDate) ||
+                other.scheduledDate == scheduledDate) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
@@ -577,6 +601,7 @@ class _$NexoNoteImpl implements _NexoNote {
         isPrimaryShoppingList,
         aiSummary,
         backgroundPattern,
+        scheduledDate,
         createdAt,
         updatedAt
       ]);
@@ -616,6 +641,7 @@ abstract class _NexoNote implements NexoNote {
       final bool isPrimaryShoppingList,
       final String? aiSummary,
       final String? backgroundPattern,
+      @ServerTimestampConverter() final DateTime? scheduledDate,
       @ServerTimestampConverter() final DateTime? createdAt,
       @ServerTimestampConverter() final DateTime? updatedAt}) = _$NexoNoteImpl;
 
@@ -689,6 +715,11 @@ abstract class _NexoNote implements NexoNote {
   /// Patrón de fondo del editor (dots, grid, lines, waves, confetti, paper, stars, null=liso)
   @override
   String? get backgroundPattern;
+
+  /// Fecha programada (para notificaciones y tablón diario)
+  @override
+  @ServerTimestampConverter()
+  DateTime? get scheduledDate;
 
   /// Timestamp de creación
   @override

@@ -4,6 +4,7 @@ import 'package:nexo/features/auth/presentation/providers/auth_provider.dart';
 import 'package:nexo/features/notes/data/notes_repository.dart';
 import 'package:nexo/features/notes/domain/note_model.dart';
 import 'package:nexo/features/auth/data/auth_repository.dart';
+import 'package:nexo/core/services/notification_service.dart';
 
 part 'notes_provider.g.dart';
 
@@ -32,6 +33,7 @@ class NotesController extends _$NotesController {
     String? richContent,
     bool isPinned = false,
     String noteSubType = 'text',
+    DateTime? scheduledDate,
   }) async {
     final user = ref.read(authStateChangesProvider).valueOrNull;
     if (user == null) return;
@@ -48,8 +50,18 @@ class NotesController extends _$NotesController {
         richContent: richContent,
         isPinned: isPinned,
         noteSubType: noteSubType,
+        scheduledDate: scheduledDate,
       );
       await ref.read(notesRepositoryProvider).createNote(note);
+
+      if (scheduledDate != null) {
+        await NotificationService().scheduleNotification(
+          id: note.id.hashCode,
+          title: 'Recordatorio de Nexo',
+          body: title.isEmpty ? (content.isEmpty ? 'Post-it' : content) : title,
+          scheduledDate: scheduledDate,
+        );
+      }
     });
   }
 
@@ -93,6 +105,17 @@ class NotesController extends _$NotesController {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       await ref.read(notesRepositoryProvider).updateNote(note);
+
+      if (note.scheduledDate != null) {
+        await NotificationService().scheduleNotification(
+          id: note.id.hashCode,
+          title: 'Recordatorio de Nexo',
+          body: note.title.isEmpty ? (note.content ?? 'Post-it') : note.title,
+          scheduledDate: note.scheduledDate!,
+        );
+      } else {
+        await NotificationService().cancelNotification(note.id.hashCode);
+      }
     });
   }
 

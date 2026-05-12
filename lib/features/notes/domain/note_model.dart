@@ -97,6 +97,9 @@ class NexoNote with _$NexoNote {
     /// Patrón de fondo del editor (dots, grid, lines, waves, confetti, paper, stars, null=liso)
     String? backgroundPattern,
 
+    /// Fecha programada (para notificaciones y tablón diario)
+    @ServerTimestampConverter() DateTime? scheduledDate,
+
     /// Timestamp de creación
     @ServerTimestampConverter() DateTime? createdAt,
 

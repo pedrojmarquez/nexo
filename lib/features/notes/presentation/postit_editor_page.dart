@@ -20,6 +20,7 @@ class _PostItEditorPageState extends ConsumerState<PostItEditorPage>
     with SingleTickerProviderStateMixin {
   late TextEditingController _contentController;
   late Color _selectedColor;
+  DateTime? _scheduledDate;
   late AnimationController _animController;
   late Animation<double> _fadeAnim;
 
@@ -40,6 +41,7 @@ class _PostItEditorPageState extends ConsumerState<PostItEditorPage>
     _contentController =
         TextEditingController(text: widget.note?.content ?? '');
     _selectedColor = _getInitialColor();
+    _scheduledDate = widget.note?.scheduledDate;
 
     _animController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 400));
@@ -69,6 +71,33 @@ class _PostItEditorPageState extends ConsumerState<PostItEditorPage>
     super.dispose();
   }
 
+  Future<void> _pickDateTime() async {
+    final date = await showDatePicker(
+      context: context,
+      initialDate: _scheduledDate ?? DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+    );
+    if (date == null) return;
+
+    if (!mounted) return;
+    final time = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(_scheduledDate ?? DateTime.now()),
+    );
+    if (time == null) return;
+
+    setState(() {
+      _scheduledDate = DateTime(
+        date.year,
+        date.month,
+        date.day,
+        time.hour,
+        time.minute,
+      );
+    });
+  }
+
   void _saveAndClose() {
     final content = _contentController.text.trim();
 
@@ -88,6 +117,7 @@ class _PostItEditorPageState extends ConsumerState<PostItEditorPage>
               content: content,
               accentColor: _colorToHex(_selectedColor),
               noteSubType: 'post_it',
+              scheduledDate: _scheduledDate,
               updatedAt: DateTime.now(),
             ),
           );
@@ -97,6 +127,7 @@ class _PostItEditorPageState extends ConsumerState<PostItEditorPage>
             content,
             color: _colorToHex(_selectedColor),
             noteSubType: 'post_it',
+            scheduledDate: _scheduledDate,
           );
     }
 
@@ -122,6 +153,16 @@ class _PostItEditorPageState extends ConsumerState<PostItEditorPage>
                   fontSize: 14,
                   fontWeight: FontWeight.w600)),
           actions: [
+            IconButton(
+              icon: Icon(
+                _scheduledDate != null
+                    ? Icons.notifications_active_rounded
+                    : Icons.notification_add_outlined,
+                color: _scheduledDate != null ? Colors.black87 : Colors.black54,
+              ),
+              onPressed: _pickDateTime,
+              tooltip: 'Recordatorio',
+            ),
             TextButton(
               onPressed: _saveAndClose,
               child: const Text('Guardar',
@@ -183,23 +224,48 @@ class _PostItEditorPageState extends ConsumerState<PostItEditorPage>
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 28),
-                child: TextField(
-                  controller: _contentController,
-                  autofocus: widget.note == null,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    color: Colors.black87,
-                    height: 1.6,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  decoration: const InputDecoration(
-                    hintText: 'Escribe tu pensamiento...',
-                    border: InputBorder.none,
-                    hintStyle: TextStyle(color: Colors.black26),
-                  ),
-                  maxLines: null,
-                  expands: true,
-                  textAlignVertical: TextAlignVertical.top,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (_scheduledDate != null)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.alarm_rounded,
+                                size: 14, color: Colors.black54),
+                            const SizedBox(width: 6),
+                            Text(
+                              'Recordatorio: ${_scheduledDate!.day}/${_scheduledDate!.month} a las ${_scheduledDate!.hour.toString().padLeft(2, '0')}:${_scheduledDate!.minute.toString().padLeft(2, '0')}',
+                              style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.black54,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ],
+                        ),
+                      ),
+                    Expanded(
+                      child: TextField(
+                        controller: _contentController,
+                        autofocus: widget.note == null,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          color: Colors.black87,
+                          height: 1.6,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        decoration: const InputDecoration(
+                          hintText: 'Escribe tu pensamiento...',
+                          border: InputBorder.none,
+                          hintStyle: TextStyle(color: Colors.black26),
+                        ),
+                        maxLines: null,
+                        expands: true,
+                        textAlignVertical: TextAlignVertical.top,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

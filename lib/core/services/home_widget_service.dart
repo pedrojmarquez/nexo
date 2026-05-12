@@ -94,6 +94,34 @@ class HomeWidgetService {
     }
   }
 
+  static Future<void> updateDailyBoardWidget(List<NexoNote> notes) async {
+    try {
+      final now = DateTime.now();
+      final todayPostIts = notes.where((n) {
+        if (n.noteSubType != 'post_it' || n.scheduledDate == null) return false;
+        final d = n.scheduledDate!;
+        return d.year == now.year && d.month == now.month && d.day == now.day;
+      }).toList();
+
+      // Ordenar por hora
+      todayPostIts.sort((a, b) => a.scheduledDate!.compareTo(b.scheduledDate!));
+
+      final itemsJson = jsonEncode(todayPostIts.map((n) {
+        final time =
+            '${n.scheduledDate!.hour.toString().padLeft(2, '0')}:${n.scheduledDate!.minute.toString().padLeft(2, '0')}';
+        return {
+          'text': n.title,
+          'time': time,
+        };
+      }).toList());
+
+      await HomeWidget.saveWidgetData<String>('daily_board_items', itemsJson);
+      await HomeWidget.updateWidget(name: 'DailyBoardWidgetProvider');
+    } catch (e) {
+      debugPrint('Error updating Daily Board Widget: $e');
+    }
+  }
+
   static String _getDayName(Weekday day) {
     switch (day) {
       case Weekday.monday: return 'Lunes';

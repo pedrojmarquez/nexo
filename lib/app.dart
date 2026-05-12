@@ -13,11 +13,34 @@ import 'package:nexo/core/theme/theme_provider.dart';
 /// ─────────────────────────────────────────────────────────────────────────────
 /// NexoApp — Widget raíz. Usa GoRouter generado por Riverpod.
 /// ─────────────────────────────────────────────────────────────────────────────
-class NexoApp extends ConsumerWidget {
+class NexoApp extends ConsumerStatefulWidget {
   const NexoApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<NexoApp> createState() => _NexoAppState();
+}
+
+class _NexoAppState extends ConsumerState<NexoApp> {
+  @override
+  void initState() {
+    super.initState();
+    _checkHomeWidgetLaunch();
+  }
+
+  void _checkHomeWidgetLaunch() {
+    HomeWidget.initiallyLaunchedFromHomeWidget().then(_handleHomeWidgetClick);
+    HomeWidget.widgetClicked.listen(_handleHomeWidgetClick);
+  }
+
+  void _handleHomeWidgetClick(Uri? uri) {
+    if (uri?.host == 'add_note') {
+      // Navegar a la pantalla de creación de post-it
+      ref.read(appRouterProvider).push('/notes/post-it/new');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     // ── Sincronización con Home Widgets ────────────────────────────────
     ref.listen(userNotesProvider, (previous, next) {
       if (next.hasValue) {
@@ -32,6 +55,9 @@ class NexoApp extends ConsumerWidget {
         final shopping =
             notes.where((n) => n.isPrimaryShoppingList).firstOrNull;
         HomeWidgetService.updateShoppingListWidget(shopping);
+
+        // Tablón diario (post-its programados)
+        HomeWidgetService.updateDailyBoardWidget(notes);
       }
     });
 
