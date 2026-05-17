@@ -31,7 +31,8 @@ class _PostItEditorPageState extends ConsumerState<PostItEditorPage> with Single
     super.initState();
     _contentController = TextEditingController(text: widget.note?.content ?? '');
     _selectedColor = _getInitialColor();
-    _scheduledDate = widget.note?.scheduledDate;
+    _scheduledDate = widget.note?.scheduledDate ?? 
+        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day + 1, 8, 0);
     _animController = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
     _fadeAnim = CurvedAnimation(parent: _animController, curve: Curves.easeOut);
     _animController.forward();
@@ -124,10 +125,19 @@ class _PostItEditorPageState extends ConsumerState<PostItEditorPage> with Single
             IconButton(
               icon: Icon(_scheduledDate != null ? Icons.notifications_active_rounded : Icons.notification_add_outlined, color: _scheduledDate != null ? Colors.black87 : Colors.black54),
               onPressed: () async {
-                final date = await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime.now(), lastDate: DateTime.now().add(const Duration(days: 365)));
+                final initialDate = _scheduledDate ?? DateTime.now();
+                final date = await showDatePicker(
+                  context: context, 
+                  initialDate: initialDate, 
+                  firstDate: DateTime.now().subtract(const Duration(days: 365)), 
+                  lastDate: DateTime.now().add(const Duration(days: 365 * 5))
+                );
                 if (date == null) return;
-                final time = await showTimePicker(context: context, initialTime: TimeOfDay.now());
+                
+                final initialTime = _scheduledDate != null ? TimeOfDay.fromDateTime(_scheduledDate!) : TimeOfDay.now();
+                final time = await showTimePicker(context: context, initialTime: initialTime);
                 if (time == null) return;
+                
                 setState(() => _scheduledDate = DateTime(date.year, date.month, date.day, time.hour, time.minute));
               },
             ),

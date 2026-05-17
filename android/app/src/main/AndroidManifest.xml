@@ -61,6 +61,33 @@
                 android:resource="@xml/widget_shopping_info" />
         </receiver>
 
+        <!-- Servicio remoto que alimenta la ListView del widget de compra -->
+        <service
+            android:name=".ShoppingWidgetService"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <!-- Receiver que gestiona el toggle (tachado) de cada item -->
+        <receiver
+            android:name=".ShoppingToggleReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.nexoapp.nexo.action.SHOPPING_TOGGLE" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Receiver de home_widget para callbacks en background hacia Dart -->
+        <receiver android:name="es.antonborri.home_widget.HomeWidgetBackgroundReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="es.antonborri.home_widget.action.BACKGROUND" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name="es.antonborri.home_widget.HomeWidgetBackgroundService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="false" />
+
         <receiver android:name=".MealCalendarWidgetProvider" android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

@@ -72,75 +72,6 @@ GoRouter appRouter(Ref ref) {
               pageBuilder: (context, state) => const NoTransitionPage(
                 child: NotesPage(),
               ),
-              routes: [
-                // ── Editor de nota estándar (nueva o edición) ──────────
-                GoRoute(
-                  path: 'detalle',
-                  builder: (context, state) {
-                    final note = state.extra as NexoNote?;
-                    return NoteEditorPage(note: note);
-                  },
-                ),
-                GoRoute(
-                  path: 'nuevo',
-                  builder: (context, state) {
-                    // extra puede indicar el tipo, pero va al editor estándar
-                    return const NoteEditorPage();
-                  },
-                ),
-                // ── Editor de Post-it ─────────────────────────────────
-                GoRoute(
-                  path: 'postit',
-                  pageBuilder: (context, state) {
-                    final note = state.extra as NexoNote?;
-                    return CustomTransitionPage(
-                      key: state.pageKey,
-                      child: PostItEditorPage(note: note),
-                      transitionsBuilder: (context, animation, _, child) {
-                        return SlideTransition(
-                          position: Tween(
-                            begin: const Offset(0, 0.3),
-                            end: Offset.zero,
-                          ).animate(CurvedAnimation(
-                              parent: animation, curve: Curves.easeOutCubic)),
-                          child:
-                              FadeTransition(opacity: animation, child: child),
-                        );
-                      },
-                    );
-                  },
-                ),
-                // ── Editor de Lista de la Compra ──────────────────────
-                GoRoute(
-                  path: 'lista',
-                  pageBuilder: (context, state) {
-                    final note = state.extra as NexoNote?;
-                    return CustomTransitionPage(
-                      key: state.pageKey,
-                      child: ShoppingListEditorPage(note: note),
-                      transitionsBuilder: (context, animation, _, child) {
-                        return SlideTransition(
-                          position: Tween(
-                            begin: const Offset(1, 0),
-                            end: Offset.zero,
-                          ).animate(CurvedAnimation(
-                              parent: animation, curve: Curves.easeOutCubic)),
-                          child:
-                              FadeTransition(opacity: animation, child: child),
-                        );
-                      },
-                    );
-                  },
-                ),
-                // ── Compartir nota ────────────────────────────────────
-                GoRoute(
-                  path: 'compartir',
-                  builder: (context, state) {
-                    final note = state.extra as NexoNote;
-                    return ShareNotePage(note: note);
-                  },
-                ),
-              ],
             ),
           ]),
           StatefulShellBranch(routes: [
@@ -160,6 +91,47 @@ GoRouter appRouter(Ref ref) {
             ),
           ]),
         ],
+      ),
+      // ── Rutas fuera del Shell (Pantalla completa) ──────────────────
+      GoRoute(
+        path: '/notas/detalle',
+        builder: (context, state) {
+          final note = state.extra as NexoNote?;
+          return NoteEditorPage(note: note);
+        },
+      ),
+      GoRoute(
+        path: '/notas/nuevo',
+        builder: (context, state) => const NoteEditorPage(),
+      ),
+      GoRoute(
+        path: '/notas/postit',
+        pageBuilder: (context, state) {
+          final note = state.extra as NexoNote?;
+          return CustomTransitionPage(
+            key: state.pageKey,
+            child: PostItEditorPage(note: note),
+            transitionsBuilder: (context, animation, _, child) => FadeTransition(opacity: animation, child: child),
+          );
+        },
+      ),
+      GoRoute(
+        path: '/notas/lista',
+        pageBuilder: (context, state) {
+          final note = state.extra as NexoNote?;
+          return CustomTransitionPage(
+            key: state.pageKey,
+            child: ShoppingListEditorPage(note: note),
+            transitionsBuilder: (context, animation, _, child) => FadeTransition(opacity: animation, child: child),
+          );
+        },
+      ),
+      GoRoute(
+        path: '/notas/compartir',
+        builder: (context, state) {
+          final note = state.extra as NexoNote;
+          return ShareNotePage(note: note);
+        },
       ),
     ],
   );

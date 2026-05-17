@@ -161,6 +161,32 @@ class _ShoppingListEditorPageState
           ),
         ),
         actions: [
+          // Borrar lista
+          if (widget.note != null)
+            IconButton(
+              icon: const Icon(Icons.delete_outline_rounded, color: NexoColors.error),
+              onPressed: () async {
+                final confirmed = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('¿Eliminar lista?'),
+                    content: const Text('Esta acción no se puede deshacer.'),
+                    actions: [
+                      TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('CANCELAR')),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, true),
+                        style: TextButton.styleFrom(foregroundColor: NexoColors.error),
+                        child: const Text('ELIMINAR'),
+                      ),
+                    ],
+                  ),
+                );
+                if (confirmed == true) {
+                  ref.read(notesControllerProvider.notifier).deleteNote(widget.note!.id);
+                  if (mounted) context.pop();
+                }
+              },
+            ),
           // Primary list toggle
           IconButton(
             icon: Icon(

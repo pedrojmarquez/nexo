@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:nexo/core/theme/app_colors.dart';
-import 'package:nexo/core/theme/app_shapes.dart';
 import 'package:nexo/features/meals/domain/meal_plan_model.dart';
 import 'package:nexo/features/meals/presentation/providers/meals_provider.dart';
 import 'package:nexo/features/meals/presentation/widgets/add_meal_sheet.dart';

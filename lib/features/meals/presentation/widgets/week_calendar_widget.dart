@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nexo/core/theme/app_colors.dart';
 import 'package:nexo/core/theme/app_shapes.dart';
-import 'package:nexo/features/meals/domain/meal_plan_model.dart';
-import 'package:intl/intl.dart';
 
 /// ─────────────────────────────────────────────────────────────────────────────
 /// WeekCalendarWidget — Mini calendario semanal compacto

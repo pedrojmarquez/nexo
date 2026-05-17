@@ -13,12 +13,17 @@ class NotificationService {
       FlutterLocalNotificationsPlugin();
 
   Future<void> init() async {
-    tz.initializeTimeZones();
-    final timezoneInfo = await FlutterTimezone.getLocalTimezone();
-    tz.setLocalLocation(tz.getLocation(timezoneInfo.identifier));
+    try {
+      tz.initializeTimeZones();
+      final dynamic timezoneResult = await FlutterTimezone.getLocalTimezone();
+      final String timezoneId = timezoneResult is String ? timezoneResult : timezoneResult.toString();
+      tz.setLocalLocation(tz.getLocation(timezoneId));
+    } catch (e) {
+      debugPrint('Error initializing timezone: $e');
+    }
 
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+        AndroidInitializationSettings('@mipmap/launcher_icon');
 
     const InitializationSettings initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,

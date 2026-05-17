@@ -17,14 +17,7 @@ class MealCalendarWidgetProvider : HomeWidgetProvider() {
     ) {
         appWidgetIds.forEach { widgetId ->
             val views = RemoteViews(context.packageName, R.layout.widget_meal).apply {
-                val dayName = widgetData.getString("meal_today_name", "Hoy")
                 val mealsJsonString = widgetData.getString("meal_today_items", "[]")
-
-                if (dayName == "Hoy") {
-                    setTextViewText(R.id.tv_title, "Comidas de Hoy")
-                } else {
-                    setTextViewText(R.id.tv_title, "Comidas del $dayName")
-                }
 
                 var mealsText = ""
                 try {
@@ -33,25 +26,35 @@ class MealCalendarWidgetProvider : HomeWidgetProvider() {
                         val obj = jsonArray.getJSONObject(i)
                         val slot = obj.getString("slot")
                         val name = obj.getString("name")
-                        val emoji = when(slot.lowercase()) {
-                            "breakfast" -> "\u2615" // Coffee ☕
-                            "lunch" -> "\uD83C\uDF72" // Stew 🍲
-                            "dinner" -> "\uD83C\uDF19" // Moon 🌙
-                            "snack" -> "\uD83C\uDF4E" // Apple 🍎
-                            else -> "\uD83C\uDF7D\uFE0F" // Plate 🍽️
+                        
+                        val slotLabel = when(slot.lowercase()) {
+                            "breakfast" -> "Desayuno"
+                            "lunch" -> "Almuerzo"
+                            "dinner" -> "Cena"
+                            "snack" -> "Snack"
+                            else -> slot.replaceFirstChar { it.uppercase() }
                         }
-                        mealsText += "$emoji $name\n"
+                        
+                        val emoji = when(slot.lowercase()) {
+                            "breakfast" -> "\u2615"
+                            "lunch" -> "\uD83C\uDF72"
+                            "dinner" -> "\uD83C\uDF19"
+                            "snack" -> "\uD83C\uDF4E"
+                            else -> "\uD83C\uDF7D\uFE0F"
+                        }
+                        
+                        mealsText += "$emoji $slotLabel: $name\n"
                     }
+                    
                     if (mealsText.isEmpty()) {
-                        mealsText = "No hay comidas planeadas.\n¡Abre Nexo para planificarlas!"
+                        mealsText = "Nada planeado para hoy.\n¡Toca para añadir algo!"
                     }
                 } catch (e: Exception) {
-                    mealsText = "Error al cargar las comidas"
+                    mealsText = "Sin plan para hoy"
                 }
 
                 setTextViewText(R.id.tv_meals, mealsText.trim())
 
-                // Intent para abrir el calendario de comidas (nexo://meals)
                 val intent = es.antonborri.home_widget.HomeWidgetLaunchIntent.getActivity(
                     context, 
                     MainActivity::class.java, 

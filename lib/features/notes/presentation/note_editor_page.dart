@@ -190,7 +190,7 @@ class _NoteEditorPageState extends ConsumerState<NoteEditorPage> {
               ),
             ),
           ),
-          if (isKeyboardVisible && _editorFocusNode.hasFocus)
+          if (isKeyboardVisible)
             Container(
               decoration: BoxDecoration(
                 color: NexoColors.surface,

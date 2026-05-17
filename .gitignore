@@ -17,6 +17,8 @@ firebase_options.dart
 .idea/
 .vscode/
 *.iml
+.claude
+CLAUDE.md
 
 # macOS
 .DS_Store

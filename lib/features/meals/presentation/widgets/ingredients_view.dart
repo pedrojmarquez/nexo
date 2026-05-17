@@ -4,7 +4,6 @@ import 'package:nexo/core/theme/app_colors.dart';
 import 'package:nexo/core/theme/app_shapes.dart';
 import 'package:nexo/features/notes/domain/note_model.dart';
 import 'package:nexo/features/notes/presentation/providers/notes_provider.dart';
-import 'package:nexo/features/auth/presentation/providers/auth_provider.dart';
 
 /// ─────────────────────────────────────────────────────────────────────────────
 /// IngredientsView — Lista de ingredientes con cross-reference a la compra
@@ -27,7 +26,6 @@ class IngredientsView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(authStateChangesProvider).valueOrNull;
     final notesAsync = ref.watch(userNotesProvider);
 
     // Obtener items de la lista de compra principal

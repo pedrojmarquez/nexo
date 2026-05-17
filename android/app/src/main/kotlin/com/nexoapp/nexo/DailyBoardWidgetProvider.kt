@@ -26,13 +26,13 @@ class DailyBoardWidgetProvider : HomeWidgetProvider() {
                         val obj = jsonArray.getJSONObject(i)
                         val text = obj.getString("text")
                         val time = obj.getString("time")
-                        itemsText += "\u2022 $time - $text\n"
+                        itemsText += "\u23F0 $time - $text\n"
                     }
                     if (itemsText.isEmpty()) {
-                        itemsText = "No tienes recordatorios pendientes para hoy. ¡Disfruta tu día!"
+                        itemsText = "No tienes post-its para hoy. ¡Añade uno nuevo!"
                     }
                 } catch (e: Exception) {
-                    itemsText = "Error al cargar recordatorios"
+                    itemsText = "Tablón de Post-its"
                 }
 
                 setTextViewText(R.id.tv_content, itemsText.trim())

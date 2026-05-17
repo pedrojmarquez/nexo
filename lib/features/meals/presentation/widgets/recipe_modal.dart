@@ -80,7 +80,7 @@ class RecipeModal extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _buildStatItem(Icons.timer_outlined, '${recipe.prepTimeMinutes + (recipe.cookTimeMinutes ?? 0)} min'),
+                    _buildStatItem(Icons.timer_outlined, '${recipe.prepTimeMinutes + recipe.cookTimeMinutes} min'),
                     Container(width: 1, height: 20, color: NexoColors.divider),
                     _buildStatItem(Icons.restaurant_outlined, '${recipe.servings} raciones'),
                     Container(width: 1, height: 20, color: NexoColors.divider),
